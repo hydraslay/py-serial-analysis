@@ -1,41 +1,31 @@
-from evo.operator_breaker import Account
+from evo.operator_predictor import Predictor
 import os
 import pandas as pd
 import neat
 import numpy as np
 
-initial_fund = 10000
-
 axis_label = {
-    -1: 'balance',
-    -2: 'pos(buy)',
-    -3: 'cost(buy)',
-    -4: 'pos(sell)',
-    -5: 'cost(sell)',
-    -6: 'open(5m)',
-    -7: 'high(5m)',
-    -8: 'low(5m)',
-    -9: 'close(5m)',
-    -10: 'volume(5m)',
-    -11: 'open(15m)',
-    -12: 'high(15m)',
-    -13: 'low(15m)',
-    -14: 'close(15m)',
-    -15: 'volume(15m)',
-    -16: 'open(1h)',
-    -17: 'high(1h)',
-    -18: 'low(1h)',
-    -19: 'close(1h)',
-    -20: 'volume(1h)',
-    0: 'tp(buy)',
-    1: 'tp(sell)',
-    2: 'order(buy)',
-    3: 'order(sell)',
-    4: 'amount(2^3)',
-    5: 'amount(2^2)',
-    6: 'amount(2^1)',
-    7: 'amount(2^0)',
+    -1: 'open(5m)',
+    -2: 'high(5m)',
+    -3: 'low(5m)',
+    -4: 'close(5m)',
+    -5: 'volume(5m)',
+    -6: 'open(15m)',
+    -7: 'high(15m)',
+    -8: 'low(15m)',
+    -9: 'close(15m)',
+    -10: 'volume(15m)',
+    -11: 'open(1h)',
+    -12: 'high(1h)',
+    -13: 'low(1h)',
+    -14: 'close(1h)',
+    -15: 'volume(1h)',
+    0: 'next_1',
+    1: 'next_2',
+    2: 'next_3',
+    3: 'next_4',
 }
+
 
 def read_data():
     filename_train = os.path.join(os.path.dirname(__file__), 'data', 'USDJPY_Train.csv')
@@ -86,9 +76,8 @@ def merge_data(hi_freq, lo_freq, add_column):
 csv_data = read_data()
 
 market_inputs = csv_data[30000:30300]
-eval_times = 3
-bulk_size = 150
-max_drop_rate = 0.75
+eval_times = 2
+bulk_size = 300
 
 
 def market_data(start, end):
@@ -96,22 +85,19 @@ def market_data(start, end):
 
 
 def eval_net(net, ticks, verbose=False):
-    balance = initial_fund
-    acc = Account(verbose)
-    acc.set_balance(balance)
+    pred = Predictor(4, 250, verbose)
     for market in ticks:
-        acc.tick_market(market)
-        input = acc.get_data()
+        pred.tick_market(market)
+        input = pred.get_data()
         output = net.activate(input)
-        balance = acc.act(output)
-        if balance < initial_fund * max_drop_rate:
-            return balance
-    return balance
+        pred.predict(output)
+
+    return pred.final_evaluate(), pred
 
 
 def eval_genome(genome, config):
     # print('eval_genome start {}'.format(genome.key))
-    genome.fitness = initial_fund
+    genome.fitness = 1
     # net = neat.nn.FeedForwardNetwork.create(genome, config)
     net = neat.nn.RecurrentNetwork.create(genome, config)
     min_fitness = -1
@@ -122,11 +108,8 @@ def eval_genome(genome, config):
         ticks = market_inputs[start: end]
         for _ in range(eval_times):
             net.reset()
-            fitness = eval_net(net, ticks)
+            fitness, _ = eval_net(net, ticks)
             min_fitness = fitness if fitness < min_fitness or min_fitness == -1 else min_fitness
-            if min_fitness < initial_fund * max_drop_rate:
-                keep_going = False
-                break
         if end == len(market_inputs):
             keep_going = False
         else:

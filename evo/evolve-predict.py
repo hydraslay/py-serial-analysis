@@ -4,7 +4,7 @@ import multiprocessing
 import os
 import neat
 import evo.visualize as visualize
-from evo.eval_exchange import eval_genome, eval_net, market_data, axis_label
+from evo.eval_predict import eval_genome, eval_net, market_data, axis_label
 
 
 def eval_genomes(genomes, config):
@@ -29,7 +29,7 @@ def run(config_file):
 
     # Run for up to N generations.
     pe = neat.ParallelEvaluator(multiprocessing.cpu_count() - 1, eval_genome)
-    winner = p.run(pe.evaluate, 1000)
+    winner = p.run(pe.evaluate, 100)
 
     # Display the winning genome.
     print('\nBest genome:\n{!s}'.format(winner))
@@ -39,19 +39,19 @@ def run(config_file):
     # winner_net = neat.nn.FeedForwardNetwork.create(winner, config)
     winner_net = neat.nn.RecurrentNetwork.create(winner, config)
     winner_net.reset()
-    output, acc = eval_net(winner_net, market_data(30000, 30350), verbose=True)
+    output, pred = eval_net(winner_net, market_data(30050, 30350), verbose=True)
     print(" final balance 1:")
-    print(acc)
+    print(pred)
 
     winner_net.reset()
-    output, acc = eval_net(winner_net, market_data(30000, 30400), verbose=True)
+    output, pred = eval_net(winner_net, market_data(30100, 30400), verbose=True)
     print(" final balance 2:")
-    print(acc)
+    print(pred)
 
     winner_net.reset()
-    output, acc = eval_net(winner_net, market_data(30000, 30450), verbose=True)
+    output, pred = eval_net(winner_net, market_data(30150, 30450), verbose=True)
     print(" final balance 3:")
-    print(acc)
+    print(pred)
 
     visualize.draw_net(config, winner, True, node_names=axis_label)
     visualize.plot_stats(stats, ylog=False, view=True)
@@ -63,5 +63,5 @@ if __name__ == '__main__':
     # here so that the script will run successfully regardless of the
     # current working directory.
     local_dir = os.path.dirname(__file__)
-    config_path = os.path.join(local_dir, 'config-exchange')
+    config_path = os.path.join(local_dir, 'config-predict')
     run(config_path)

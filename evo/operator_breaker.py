@@ -35,19 +35,35 @@ class Account(object):
     #      8     close,
     #      9     volume
     #           ]
-    def __init__(self, verbose=False):
+    def __init__(self, init_funcd, max_margin_rate, verbose=False):
         self.state = np.zeros(20)
-        self.threshold = 0.5
+        self.state[0] = init_funcd
+        self.init_fund = init_funcd
+        self.max_margin_rate = max_margin_rate
         self.verbose = verbose
+        self.max_exposure = 0
+        self.max_drop_rate = 0
+        self.lived_ticks = 0
+        self.current_price = 0
+        self.busted = False
+        self.error = False
 
     def __repr__(self):
         return 'Account state: ' \
                ' balance: {} '\
                ' buy position : {} avg cost: {}' \
-               ' sell position: {} avg cost: {}'.format(self.balance, self.pos_buy, self.cost_buy, self.pos_sell, self.cost_sell)
+               ' sell position: {} avg cost: {}' \
+               ' market: {} ' \
+               ' exposure: {}'.format(self.balance, self.pos_buy, self.cost_buy, self.pos_sell, self.cost_sell, self.current_price, self.exposure)
 
     def get_data(self):
         return self.state
+
+    def evaluate(self):
+        # exposure : as 10%
+        # win rate: x * win_rate * 100
+        # max drop rate: x * (1 - max_drop_rate)
+        return (self.balance - (self.exposure / 100)) * (1 - self.max_drop_rate) + self.lived_ticks
 
     @property
     def balance(self):
@@ -89,6 +105,13 @@ class Account(object):
         return self.state[8]
 
     @property
+    def drop_rate(self):
+        drop_rate = (self.init_fund - (self.balance - self.exposure)) / self.init_fund
+        if drop_rate > 0:
+            return drop_rate
+        return 0
+
+    @property
     def exposure(self):
         exposure = 0
         if self.pos_buy > 0:
@@ -108,10 +131,18 @@ class Account(object):
 
         # print('market: next tick')
         self.state[5:] = deepcopy(market_info)
+        self.current_price = self.market_close
+
+        exposure = self.exposure
+        # update max record
+        self.max_exposure = exposure if self.max_exposure < exposure else self.max_exposure
+        drop_rate = self.drop_rate
+        self.max_drop_rate = drop_rate if drop_rate > self.max_drop_rate else self.max_drop_rate
 
         if self.exposure > self.balance:
             # print('market: busted!!')
             self.set_balance(self.balance - self.exposure)
+            self.busted = True
 
         return self.balance
 
@@ -141,23 +172,27 @@ class Account(object):
         # print('buy {} at price {}'.format(lot, real_price))
         old_budget = self.calc_budget(self.cost_buy, self.pos_buy)
         budget = self.calc_budget(real_price, lot)
+        if budget > self.balance * self.max_margin_rate:
+            return False
         self.set_pos_buy(self.pos_buy + lot)
         new_cost = self.calc_cost(old_budget + budget, self.pos_buy)
         self.set_cost_buy(new_cost)
         if self.verbose:
             print('order(buy) {} lot at {}'.format(lot, real_price))
-        return
+        return True
 
     def order_sell(self, lot, real_price):
         # print('sell {} at price {}'.format(lot, real_price))
         old_budget = self.calc_budget(self.cost_sell, self.pos_sell)
         budget = self.calc_budget(real_price, lot)
+        if budget > self.balance * self.max_margin_rate:
+            return False
         self.set_pos_sell(self.pos_sell + lot)
         new_cost = self.calc_cost(old_budget + budget, self.pos_sell)
         self.set_cost_sell(new_cost)
         if self.verbose:
             print('order(sell) {} lot at {}'.format(lot, real_price))
-        return
+        return True
 
     def calc_budget(self, price, lot):
         return price * lot * lot_amount / leverage_rate
@@ -169,66 +204,76 @@ class Account(object):
         return budget * leverage_rate / (lot * lot_amount)
 
     # action_bits -->
-    #   0: take profit buy
-    #   1: take profit sell
-    #   2: order buy
-    #   3: order sell
-    #   4 ~ 7: binary unit count max = 1111 = 15
-    def act(self, action_bits):
-        if action_bits[0] > self.threshold:
-            real_price = sell_price(self.market_close)
-            self.tp_buy(real_price)
+    #   diff <10% do nothing
+    #   [0] > 100, [1] = 0: take profit buy
+    #   [1] > 100, [0] = 0: take profit sell
+    #   [0] > [1]: order buy (diff / [1] = 10% -> 1 unit 0.01 lot )
+    #   [1] > [0]: order sell
+    #   no position but tp: balance -> -1
+    def act(self, action_nums):
+        if action_nums[0] == 0 and action_nums[1] == 0:
+            return
 
-        if action_bits[1] > self.threshold:
-            real_price = sell_price(self.market_close)
-            self.tp_sell(real_price)
+        if action_nums[0] == 0 or action_nums[1] == 0:
+            if action_nums[0] > 0:
+                if self.pos_buy > 0:
+                    real_price = sell_price(self.market_close)
+                    self.tp_buy(real_price)
+                else:
+                    self.error = True
+                    return
 
-        lot = 0
-        if action_bits[4] > self.threshold:
-            lot += 8 * unit_lot
-        if action_bits[5] > self.threshold:
-            lot += 4 * unit_lot
-        if action_bits[6] > self.threshold:
-            lot += 2 * unit_lot
-        if action_bits[7] > self.threshold:
-            lot += 1 * unit_lot
-
-        if lot > 0:
-            if action_bits[2] > self.threshold and action_bits[2] > action_bits[3]:
+            if action_nums[1] > 0:
+                if self.pos_sell > 0:
+                    real_price = sell_price(self.market_close)
+                    self.tp_sell(real_price)
+                else:
+                    self.error = True
+                    return
+        else:
+            buy_factor = (action_nums[0] - action_nums[1]) / action_nums[1] if not action_nums[1] == 0 else 0
+            sell_factor = (action_nums[1] - action_nums[0]) / action_nums[0] if not action_nums[0] == 0 else 0
+            if buy_factor > 0.1:
                 # buy
+                lot = unit_lot * np.round(buy_factor * 10, decimals=0)
                 real_price = buy_price(self.market_close)
-                self.order_buy(lot, real_price)
-            if action_bits[3] > self.threshold and action_bits[3] > action_bits[2]:
+                if not self.order_buy(lot, real_price):
+                    self.error = True
+                    return
+            if sell_factor > 0.1:
                 # sell
+                lot = unit_lot * np.round(sell_factor * 10, decimals=0)
                 real_price = sell_price(self.market_close)
-                self.order_sell(lot, real_price)
+                if not self.order_sell(lot, real_price):
+                    self.error = True
+                    return
 
-        return self.balance
+        self.lived_ticks += 1
+        return
 
 
 def test():
-    a = Account()
-    a.set_balance(10000)
+    a = Account(10000, 0.75, verbose=True)
     print(a)
 
-    a.tick_market([0,120., 121., 120.000, 10])
+    a.tick_market([0, 120., 121., 120.000, 10, 0, 120., 121., 120.000, 10, 0, 120., 121., 120.000, 10])
     # buy 0.03
-    a.act([0., 0., 0., 1., 0., 0., 1., 1.])
+    a.act([0., 0., 2., 1.])
     print(a)
 
-    a.tick_market([0,120., 121., 119.000, 10])
+    a.tick_market([0, 120., 121., 119.000, 10, 0, 120., 121., 120.000, 10, 0, 120., 121., 120.000, 10])
     # tp
-    a.act([0., 1., 0., 0., 0., 0., 0., 0.])
+    a.act([1., 0., 0., 0.])
     print(a)
 
-    a.tick_market([0,120., 121., 121.000, 10])
+    a.tick_market([0, 120., 121., 121.000, 10, 0, 120., 121., 120.000, 10, 0, 120., 121., 120.000, 10])
     # tp
-    a.act([0., 0., 1., 0., 0., 0., 1., 0.])
+    a.act([0., 0., 3., 4.])
     print(a)
 
-    a.tick_market([0,120., 121., 122.000, 10])
+    a.tick_market([0, 120., 121., 122.000, 10, 0, 120., 121., 120.000, 10, 0, 120., 121., 120.000, 10])
     # tp
-    a.act([1., 0., 0., 0., 0., 0., 0., 0.])
+    a.act([0., 1., 0., 0.])
     print(a)
 
 # test()

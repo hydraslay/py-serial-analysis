@@ -3,7 +3,7 @@ from __future__ import print_function
 import os
 import neat
 import evo.visualize as visualize
-from evo.eval_for_para import eval_net, market_data, axis_label
+from evo.eval_predict import eval_net, market_data, axis_label
 
 
 def run(config_file):
