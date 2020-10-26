@@ -29,7 +29,7 @@ def run(config_file):
 
     # Run for up to N generations.
     pe = neat.ParallelEvaluator(multiprocessing.cpu_count() - 1, eval_genome)
-    winner = p.run(pe.evaluate, 100)
+    winner = p.run(pe.evaluate, 2000)
 
     # Display the winning genome.
     print('\nBest genome:\n{!s}'.format(winner))
@@ -39,17 +39,19 @@ def run(config_file):
     # winner_net = neat.nn.FeedForwardNetwork.create(winner, config)
     winner_net = neat.nn.RecurrentNetwork.create(winner, config)
     winner_net.reset()
-    output, pred = eval_net(winner_net, market_data(30050, 30350), verbose=True)
+    output, pred = eval_net(winner_net, market_data(30250, 30350), verbose=True)
     print(" final balance 1:")
     print(pred)
 
+    visualize.plot_predictions(pred.actual_history, pred.predict_history, 70, True)
+
     winner_net.reset()
-    output, pred = eval_net(winner_net, market_data(30100, 30400), verbose=True)
+    output, pred = eval_net(winner_net, market_data(30300, 30400), verbose=True)
     print(" final balance 2:")
     print(pred)
 
     winner_net.reset()
-    output, pred = eval_net(winner_net, market_data(30150, 30450), verbose=True)
+    output, pred = eval_net(winner_net, market_data(30350, 30450), verbose=True)
     print(" final balance 3:")
     print(pred)
 

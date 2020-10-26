@@ -195,3 +195,27 @@ def draw_net(config, genome, view=False, filename=None, node_names=None, show_di
     dot.render(filename, view=view)
 
     return dot
+
+
+def plot_predictions(actual, histories, ignore_ticks, view=False, filename='predictions.svg'):
+    """ Visualizes speciation throughout evolution. """
+    if plt is None:
+        warnings.warn("This display is not available due to a missing optional dependency (matplotlib)")
+        return
+
+    plt.plot(actual[ignore_ticks:], label='actual')
+    for i in range(len(histories)):
+        if i % 3 == 0:
+            plt.plot(histories[i][ignore_ticks:], label='predict_' + str(i))
+
+    plt.title("Predictions")
+    plt.ylabel("price")
+    plt.xlabel("ticks")
+    plt.legend(loc="best")
+
+    plt.savefig(filename)
+
+    if view:
+        plt.show()
+
+    plt.close()

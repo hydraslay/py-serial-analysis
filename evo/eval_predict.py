@@ -75,9 +75,9 @@ def merge_data(hi_freq, lo_freq, add_column):
 
 csv_data = read_data()
 
-market_inputs = csv_data[30000:30300]
-eval_times = 2
-bulk_size = 300
+market_inputs = csv_data[30000:30100]
+eval_times = 1
+bulk_size = 100
 
 
 def market_data(start, end):
@@ -85,7 +85,7 @@ def market_data(start, end):
 
 
 def eval_net(net, ticks, verbose=False):
-    pred = Predictor(4, 250, verbose)
+    pred = Predictor(3, 90, verbose)
     for market in ticks:
         pred.tick_market(market)
         input = pred.get_data()
