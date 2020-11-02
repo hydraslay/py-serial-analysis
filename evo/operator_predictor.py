@@ -19,11 +19,11 @@ class Predictor(object):
         #  g0 [p1  p2  p3]
         #  g1 [p1  p2  p3]
         #  g2 [p1  p2  p3]
-        self.predict_mat = np.zeros((n, n))
+        self.predict_mat = np.zeros((1 + n, n))
         #  [a1  a2  a3]
         self.actual_arr = np.zeros(n)
         self.verbose = verbose
-        self.score = 0
+        self.score = 0.
         self.total_ticks = 0
         self.pred_ticks = 0
         # more score for further ticks (multiply times per tick)
@@ -37,9 +37,9 @@ class Predictor(object):
         if self.pred_ticks == 0:
             return 'not start predict'
 
-        return ' avg score: {}' \
+        return ' worst score: {}' \
                ' total_ticks: {} ' \
-               ' pred_ticks : {} '.format(self.score / self.pred_ticks, self.total_ticks, self.pred_ticks)
+               ' pred_ticks : {} '.format(self.score, self.total_ticks, self.pred_ticks)
 
     def get_data(self):
         # close(5m), volume(5m)
@@ -48,12 +48,9 @@ class Predictor(object):
     def final_evaluate(self):
         if self.finalized:
             raise RuntimeError('should not call final_evaluate twice')
-        # evaluate partial unknown ticks
-        # for i in range(self.N - 1):
-        #     self.score += self.calc_score(i + 1)
-        #     self.pred_ticks += 1
+
         self.finalized = True
-        return self.score / self.pred_ticks
+        return self.score
 
     @property
     def market_close(self):
@@ -61,14 +58,14 @@ class Predictor(object):
 
     def calc_score(self, index):
         arr = self.predict_mat[index]
-        score = 0
+        score = 0.
         # ticks
         for i in range(len(arr) - index):
             # actual index (offset for those partially confirmed ticks)
 
             a_index = i + index
             diff = np.min([arr[i] - self.actual_arr[a_index], self.actual_arr[a_index] - arr[i]])
-            score += diff
+            score = min(diff, score)
             # method: divide * multiply
             # should --> 1 and always 0 < y <= 1
             # divided = np.min([abs(arr[i] / self.actual_arr[a_index]), abs(self.actual_arr[a_index] / arr[i])])
@@ -97,7 +94,8 @@ class Predictor(object):
                 raise TypeError('{} is not supported', format(type(market)))
 
         self.state[0:] = deepcopy(market_info)
-        self.actual_arr[0: self.N - 1] = self.actual_arr[1: self.N]
+        if self.N > 1:
+            self.actual_arr[0: self.N - 1] = self.actual_arr[1:]
         self.actual_arr[self.N - 1] = self.market_close
         self.total_ticks += 1
 
@@ -112,23 +110,32 @@ class Predictor(object):
     def predict(self, pred_nums):
         if self.total_ticks >= self.prev:
             # move prev predicts
-            self.predict_mat[0: self.N - 1] = self.predict_mat[1: self.N]
+            self.predict_mat[0: self.N] = self.predict_mat[1:]
             # set current predict
             # + 0.5: move sigmoid(0~1) to (0.5~1.5)
             predicted_value = (np.array(pred_nums) + 0.5) * self.market_close
-            self.predict_mat[self.N - 1] = predicted_value
+            self.predict_mat[self.N] = predicted_value
 
         # evaluate finished predicts
         if self.predict_mat[0, 0] != 0:
-            self.score += self.calc_score(0)
+            new_score = self.calc_score(0)
+            self.score = min(new_score, self.score)
             self.pred_ticks += 1
 
             if self.verbose:
                 if self.predict_history is None:
                     self.predict_history = []
-                combined = deepcopy(self.actual_history.tolist())
-                combined.extend(self.predict_mat[0].tolist())
-                self.predict_history.append(combined)
+                    if self.N == 1:
+                        # a single series
+                        self.predict_history = deepcopy(self.actual_history.tolist())
+
+                if self.N > 1:
+                    combined = deepcopy(self.actual_history.tolist())
+                    combined.extend(self.predict_mat[0].tolist())
+                    self.predict_history.append(combined)
+                else:
+                    # a single series
+                    self.predict_history.append(self.predict_mat[0])
 
         return
 

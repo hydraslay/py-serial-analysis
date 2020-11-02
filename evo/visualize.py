@@ -204,9 +204,12 @@ def plot_predictions(actual, histories, ignore_ticks, view=False, filename='pred
         return
 
     plt.plot(actual[ignore_ticks:], label='actual')
-    for i in range(len(histories)):
-        if i % 3 == 0:
-            plt.plot(histories[i][ignore_ticks:], label='predict_' + str(i))
+    if not type(histories[0]) == list:
+        plt.plot(histories[ignore_ticks:], label='predict')
+    else:
+        for i in range(len(histories)):
+            if i % 3 == 0:
+                plt.plot(histories[i][ignore_ticks:], label='predict_' + str(i))
 
     plt.title("Predictions")
     plt.ylabel("price")

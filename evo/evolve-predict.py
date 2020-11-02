@@ -29,7 +29,8 @@ def run(config_file):
 
     # Run for up to N generations.
     pe = neat.ParallelEvaluator(multiprocessing.cpu_count() - 1, eval_genome)
-    winner = p.run(pe.evaluate, 25)
+    # winner = p.run(eval_genomes, 100)
+    winner = p.run(pe.evaluate, 100)
 
     # Display the winning genome.
     print('\nBest genome:\n{!s}'.format(winner))
