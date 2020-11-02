@@ -13,7 +13,7 @@ class Predictor(object):
     #      ...
     #           ]
     def __init__(self, n, prev, verbose=False):
-        self.state = np.zeros(15)
+        self.state = np.zeros(10)
         self.N = n
         self.prev = prev
         #  g0 [p1  p2  p3]
@@ -42,7 +42,8 @@ class Predictor(object):
                ' pred_ticks : {} '.format(self.score / self.pred_ticks, self.total_ticks, self.pred_ticks)
 
     def get_data(self):
-        return self.state
+        # close(5m), volume(5m)
+        return [self.state[3], self.state[4]]
 
     def final_evaluate(self):
         if self.finalized:
