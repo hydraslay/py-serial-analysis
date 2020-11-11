@@ -222,3 +222,42 @@ def plot_predictions(actual, histories, ignore_ticks, view=False, filename='pred
         plt.show()
 
     plt.close()
+
+
+def plot_binary_predictions(actual, predict, threshold, no_predict, view=False, filename='predictions.svg'):
+    """ Visualizes speciation throughout evolution. """
+    if plt is None:
+        warnings.warn("This display is not available due to a missing optional dependency (matplotlib)")
+        return
+
+    plt.plot(actual[no_predict:, 0], label='actual')
+    positive = []
+    negative = []
+    for i in range(len(actual) - no_predict):
+        x = i
+        act = actual[i + no_predict]
+        pred = predict[i + no_predict]
+        if np.abs(pred[0] - pred[1]) > threshold:
+            if pred[0] > pred[1]:
+                negative.append([x, act[0]])
+            else:
+                positive.append([x, act[0]])
+    if len(positive) > 0:
+        positive = np.array(positive)
+        plt.scatter(x=positive[0:, 0], y=positive[0:, 1], label='predict_positive', c='red')
+
+    if len(negative) > 0:
+        negative = np.array(negative)
+        plt.scatter(x=negative[0:, 0], y=negative[0:, 1], label='predict_negative', c='green')
+
+    plt.title("Predictions")
+    plt.ylabel("price")
+    plt.xlabel("ticks")
+    plt.legend(loc="best")
+
+    plt.savefig(filename)
+
+    if view:
+        plt.show()
+
+    plt.close()
