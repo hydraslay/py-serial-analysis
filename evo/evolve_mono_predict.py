@@ -4,7 +4,7 @@ import multiprocessing
 import os
 import neat
 import evo.visualize as visualize
-from evo.eval_binary_predict import eval_genome, eval_net, market_data, axis_label
+from evo.eval_mono_predict import eval_genome, eval_net, market_data, axis_label
 
 
 def eval_genomes(genomes, config):
@@ -41,15 +41,15 @@ def run(config_file):
     winner_net = neat.nn.RecurrentNetwork.create(winner, config)
     winner_net.reset()
 
-    output, pred = eval_net(winner_net, market_data(30500, 31000), verbose=True)
+    output, pred = eval_net(winner_net, market_data(31500, 32000), verbose=True)
     print(" trained prediction:")
     threshold = pred.threshold
     print(pred)
     print(" expended prediction:")
-    output, pred = eval_net(winner_net, market_data(31000, 31100), verbose=True, pred=pred)
+    output, pred = eval_net(winner_net, market_data(32000, 32020), verbose=True, pred=pred)
     print(pred)
 
-    visualize.plot_binary_predictions(np.array(pred.actual_history), np.array(pred.predict_history),
+    visualize.plot_mono_predictions(pred.direction, np.array(pred.actual_history), np.array(pred.predict_history),
                                       threshold, pred.no_predict, True, filename='prediction_ext.svg')
 
     visualize.draw_net(config, winner, True, node_names=axis_label)
@@ -62,5 +62,5 @@ if __name__ == '__main__':
     # here so that the script will run successfully regardless of the
     # current working directory.
     local_dir = os.path.dirname(__file__)
-    config_path = os.path.join(local_dir, 'config-binary-predict')
+    config_path = os.path.join(local_dir, 'config-mono-predict')
     run(config_path)

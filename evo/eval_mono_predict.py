@@ -1,5 +1,5 @@
 from evo.history_data import read_data
-from evo.operator_binary_predictor import BinaryPredictor
+from evo.operator_mono_predictor import MonoPredictor
 import neat
 
 axis_label = {
@@ -22,7 +22,7 @@ axis_label = {
 
 csv_data = read_data()
 
-market_inputs = csv_data[30000:31000]
+market_inputs = csv_data[31000:32000]
 eval_times = 1
 bulk_size = 500
 
@@ -33,21 +33,17 @@ def market_data(start, end):
 
 def eval_net(net, ticks, verbose=False, pred=None):
     if pred is None:
-        pred = BinaryPredictor(verbose)
+        pred = MonoPredictor(1, verbose, no_predict=480)
     for market in ticks:
         pred.tick_market(market)
         input = pred.get_data()
         output = net.activate(input)
-        # do not allow equal
-        if output[0] == output[1]:
-            return 0, pred
         pred.predict(output)
 
     return pred.calc_score(), pred
 
 
 def eval_genome(genome, config):
-    # print('eval_genome start {}'.format(genome.key))
     genome.fitness = -1
     # net = neat.nn.FeedForwardNetwork.create(genome, config)
     net = neat.nn.RecurrentNetwork.create(genome, config)
