@@ -276,7 +276,7 @@ def plot_mono_predictions(direction, actual, predict, threshold, no_predict, vie
         x = i
         act = actual[i + no_predict]
         pred = predict[i + no_predict]
-        if pred >= threshold:
+        if pred > threshold:
             if direction == 0:
                 negative.append([x, act[0]])
             else:

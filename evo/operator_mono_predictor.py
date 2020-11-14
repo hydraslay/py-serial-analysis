@@ -56,6 +56,7 @@ class MonoPredictor(object):
     # score = win rate (this part can bu tuned to utilize training)
     def calc_score(self):
         ticks = []
+        self.pred_ticks = 0
         for j in range(len(self.actual_history) - self.no_predict):
             i = j + self.no_predict
             self.pred_ticks += 1
@@ -71,11 +72,19 @@ class MonoPredictor(object):
         sorted_by_confidence = sorted(ticks, key=lambda t: -t[0])
         threshold = 0
         correct_predict = 0
+        same_confidence = {}
         for i in range(len(sorted_by_confidence)):
             if sorted_by_confidence[i][1] == 1.:
                 threshold = sorted_by_confidence[i][0]
+                if threshold in same_confidence:
+                    same_confidence[threshold] += 1
+                else:
+                    same_confidence[threshold] = 1
                 correct_predict += 1
             else:
+                # failed: but same confidence with some correct
+                if threshold in same_confidence:
+                    correct_predict -= same_confidence[threshold]
                 break
         self.threshold = threshold
         self.win_rate = correct_predict / self.pred_ticks

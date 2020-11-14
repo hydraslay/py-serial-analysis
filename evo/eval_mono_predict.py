@@ -3,20 +3,11 @@ from evo.operator_mono_predictor import MonoPredictor
 import neat
 
 axis_label = {
-    -1: 'open(5m)',
-    -2: 'high(5m)',
-    -3: 'low(5m)',
-    -4: 'close(5m)',
-    -5: 'volume(5m)',
-    -6: 'open(1h)',
-    -7: 'high(1h)',
-    -8: 'low(1h)',
-    -9: 'close(1h)',
-    -10: 'volume(1h)',
-    0: 'next_1',
-    1: 'next_2',
-    2: 'next_3',
-    3: 'next_4',
+    -1: 'high ratio',
+    -2: 'low ratio',
+    -3: 'close',
+    -4: 'volume',
+    0: 'mono',
 }
 
 
@@ -24,7 +15,7 @@ csv_data = read_data()
 
 market_inputs = csv_data[31000:32000]
 eval_times = 1
-bulk_size = 500
+bulk_size = 1000
 
 
 def market_data(start, end):
@@ -33,7 +24,7 @@ def market_data(start, end):
 
 def eval_net(net, ticks, verbose=False, pred=None):
     if pred is None:
-        pred = MonoPredictor(1, verbose, no_predict=480)
+        pred = MonoPredictor(1, verbose, no_predict=970)
     for market in ticks:
         pred.tick_market(market)
         input = pred.get_data()
