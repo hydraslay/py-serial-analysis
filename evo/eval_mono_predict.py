@@ -24,14 +24,16 @@ def market_data(start, end):
 
 def eval_net(net, ticks, verbose=False, pred=None):
     if pred is None:
-        pred = MonoPredictor(1, verbose, no_predict=970)
+        pred = MonoPredictor(1, verbose, no_predict=900, threshold=1, max_low_confidence_tick=6)
     for market in ticks:
-        pred.tick_market(market)
-        input = pred.get_data()
-        output = net.activate(input)
-        pred.predict(output)
+        state = pred.tick_market(market)
+        if state <= 0:
+            break
+        input_data = pred.get_data()
+        output_data = net.activate(input_data)
+        pred.predict(output_data)
 
-    return pred.calc_score(), pred
+    return pred.score, pred
 
 
 def eval_genome(genome, config):

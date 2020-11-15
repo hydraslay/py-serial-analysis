@@ -36,12 +36,12 @@ def run(config_file):
     p.add_reporter(neat.StdOutReporter(True))
     stats = neat.StatisticsReporter()
     p.add_reporter(stats)
-    p.add_reporter(neat.Checkpointer(100))
+    p.add_reporter(neat.Checkpointer(10))
 
     # Run for up to N generations.
     pe = neat.ParallelEvaluator(multiprocessing.cpu_count() - 1, eval_genome)
     # winner = p.run(eval_genomes, 10)
-    winner = p.run(pe.evaluate, 501)
+    winner = p.run(pe.evaluate, 101)
 
     # Display the winning genome.
     print('\nBest genome:\n{!s}'.format(winner))
@@ -54,16 +54,16 @@ def run(config_file):
 
     output, pred = eval_net(winner_net, market_data(31000, 32000), verbose=True)
     print(" trained prediction:")
-    threshold = pred.threshold
     print(pred)
     print(" expended prediction:")
     output, pred = eval_net(winner_net, market_data(32000, 32030), verbose=True, pred=pred)
     print(pred)
-
+    # print(len(pred.predict_history))
+    # print(pred.predict_history[pred.no_predict:])
     visualize.plot_mono_predictions(pred.direction, np.array(pred.actual_history), np.array(pred.predict_history),
-                                      threshold, pred.no_predict, True, filename='prediction_ext.svg')
+                                    pred.threshold, pred.no_predict, True, filename='prediction_ext.svg')
 
-    visualize.draw_net(p.config, winner, True, node_names=axis_label)
+    visualize.draw_net(p.config, winner, False, node_names=axis_label)
     visualize.plot_stats(stats, ylog=False, view=True)
     visualize.plot_species(stats, view=True)
 

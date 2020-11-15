@@ -1,7 +1,4 @@
-from copy import deepcopy
-
 import numpy as np
-
 from evo import visualize
 
 
@@ -12,24 +9,23 @@ class MonoPredictor(object):
     # direction:
     # 0: for down
     # 1: for up
-    def __init__(self, direction, verbose=False, no_predict=400):
+    def __init__(self, direction, verbose=False, no_predict=400, threshold=100, max_low_confidence_tick=10):
         self.direction = direction
         self.state = np.zeros(10)
         self.no_predict = no_predict
         self.verbose = verbose
-        self.score = 0.
+        self.pred_ticks = 0.
         self.total_ticks = 0
-        self.pred_ticks = 0
         self.actual_history = None
         self.predict_history = None
-        self.threshold = 0
-        self.win_rate = 0
+        self.threshold = threshold
+        self.low_confidence_tick = 0
+        self.max_low_confidence_tick = max_low_confidence_tick
+        self.latest_predict = 0
 
     def __repr__(self):
         return ' direction: {}' \
-               ' threshold: {} ' \
-               ' win rate: {} ' \
-               ' pred_ticks : {} '.format(self.direction, self.threshold, self.win_rate, self.pred_ticks)
+               ' score : {} '.format(self.direction, self.score)
 
     def get_data(self):
         d = self.state
@@ -52,49 +48,24 @@ class MonoPredictor(object):
     def market_close(self):
         return np.array(self.state[3])
 
-    # threshold > 0: minimum confidence to keep predict 100% correct
-    # score = win rate (this part can bu tuned to utilize training)
-    def calc_score(self):
-        ticks = []
-        self.pred_ticks = 0
-        for j in range(len(self.actual_history) - self.no_predict):
+    @property
+    def score(self):
+        #
+        strong_predicts = 0
+        for j in range(len(self.predict_history) - self.no_predict):
             i = j + self.no_predict
-            self.pred_ticks += 1
-            act = self.actual_history[i]
-            confidence = self.predict_history[i]
-            result = 0.
-            if act[0] > act[1] and self.direction == 0:
-                result = 1.
-            if act[0] < act[1] and self.direction == 1:
-                result = 1.
-            ticks.append([confidence, result])
+            if self.predict_history[i] > self.threshold:
+                strong_predicts += 1
 
-        sorted_by_confidence = sorted(ticks, key=lambda t: -t[0])
-        threshold = 0
-        correct_predict = 0
-        same_confidence = {}
-        for i in range(len(sorted_by_confidence)):
-            if sorted_by_confidence[i][1] == 1.:
-                threshold = sorted_by_confidence[i][0]
-                if threshold in same_confidence:
-                    same_confidence[threshold] += 1
-                else:
-                    same_confidence[threshold] = 1
-                correct_predict += 1
-            else:
-                # failed: but same confidence with some correct
-                if threshold in same_confidence:
-                    correct_predict -= same_confidence[threshold]
-                break
-        self.threshold = threshold
-        self.win_rate = correct_predict / self.pred_ticks
-        self.score = self.win_rate
-        if self.verbose:
-            print('score calculated: {}'.format(self.score))
+        return self.pred_ticks + strong_predicts / (len(self.predict_history) - self.no_predict)
 
-        return self.score
-
-    #  add actual data, calc score
+    # add actual data, calc score
+    # -1: too many low confidence
+    # 0: predict wrong
+    # 1: predict correct
+    # 2: low confidence
+    # 3: no predict
+    # <= 0 should make train stop
     def tick_market(self, market):
         if isinstance(market, np.ndarray):
             market_info = market
@@ -114,11 +85,32 @@ class MonoPredictor(object):
             else:
                 self.actual_history.append([self.market_open.tolist(), self.market_close.tolist()])
 
+        if self.total_ticks > self.no_predict + 1:
+            self.pred_ticks += 1
+            if self.latest_predict > self.threshold:
+                # confidence strong
+                if (self.market_open < self.market_close and self.direction == 1) \
+                        or (self.market_open > self.market_close and self.direction == 0):
+                    # correct predict
+                    self.low_confidence_tick = 0
+                    return 1
+                else:
+                    return 0
+            else:
+                # confidence low
+                self.low_confidence_tick += 1
+                if self.low_confidence_tick > self.max_low_confidence_tick:
+                    return -1
+                else:
+                    return 2
+        else:
+            #  no predict
+            return 3
+
     # pred_nums -->
-    #   [0] >= [1] : up
-    #   [1] > [0] : down
-    #   | [0] - [1] | : confidential
+    #   [0] : confidence
     def predict(self, pred_nums):
+        self.latest_predict = pred_nums[0]
         if self.predict_history is None:
             self.predict_history = pred_nums
         else:
@@ -128,31 +120,29 @@ class MonoPredictor(object):
 
 
 def test():
-    a = MonoPredictor(0, verbose=True, no_predict=200)
+    a = MonoPredictor(1, verbose=True, no_predict=10)
 
     a.tick_market([120., 121., 120.000, 121., 10, 120., 121., 120.000, 120, 10])
     a.predict([0.61])
-    a.tick_market([121., 121., 120.000, 122., 10, 120., 121., 120.000, 120, 10])
+    print(a.tick_market([121., 121., 120.000, 122., 10, 120., 121., 120.000, 120, 10]))
     a.predict([0.54])
-    a.tick_market([122., 121., 120.000, 123., 10, 120., 121., 120.000, 120, 10])
+    print(a.tick_market([122., 121., 120.000, 123., 10, 120., 121., 120.000, 120, 10]))
     a.predict([0.53])
 
-    for _ in range(100):
-        a.tick_market([123., 121., 120.000, 122., 10, 120., 121., 120.000, 120, 10])
+    for _ in range(5):
+        print(a.tick_market([123., 121., 120.000, 122., 10, 120., 121., 120.000, 120, 10]))
         a.predict([0.52])
-        a.tick_market([120., 121., 125.000, 125., 10, 120., 121., 120.000, 120, 10])
-        a.predict([0.52])
+        print(a.tick_market([120., 121., 125.000, 125., 10, 120., 121., 120.000, 120, 10]))
+        a.predict([0.59])
 
-    a.tick_market([125., 121., 120.000, 124., 10, 120., 121., 120.000, 120, 10])
-    a.predict([0.18])
-    a.tick_market([124., 121., 128.000, 128., 10, 120., 121., 120.000, 120, 10])
+    print(a.tick_market([125., 121., 120.000, 124., 10, 120., 121., 120.000, 120, 10]))
+    a.predict([100.18])
+    print(a.tick_market([124., 121., 128.000, 128., 10, 120., 121., 120.000, 120, 10]))
     a.predict([0.491])
 
-    a.calc_score()
     print(a)
 
     visualize.plot_mono_predictions(a.direction, np.array(a.actual_history), np.array(a.predict_history),
                                     a.threshold, a.no_predict, True)
-
 
 # test()

@@ -105,7 +105,7 @@ class BinaryPredictor(object):
     # pred_nums -->
     #   [0] >= [1] : up
     #   [1] > [0] : down
-    #   | [0] - [1] | : confidential
+    #   | [0] - [1] | : confidence
     def predict(self, pred_nums):
         if self.predict_history is None:
             self.predict_history = [pred_nums]
