@@ -22,6 +22,21 @@ def read_data():
         return csv_data
 
 
+def read_one_data():
+    filename_train = os.path.join(os.path.dirname(__file__), 'data', 'USDJPY_Train.csv')
+    if os.path.exists(filename_train):
+        csv_data_train = pd.read_csv(filename_train, header=None, delimiter=',')
+        return csv_data_train.values
+    else:
+        filename = os.path.join(os.path.dirname(__file__), 'data', 'USDJPY5.csv')
+        csv_data_5 = pd.read_csv(filename, header=None, delimiter=',')
+        print('data ready')
+        # slice to ignore 1~2 column (timestamp)
+        csv_data = csv_data_5[:, 2:]
+        np.savetxt(filename_train, csv_data, delimiter=',', fmt='%.18f')
+        return csv_data
+
+
 def merge_data(hi_freq, lo_freq, add_column):
     # add 3 columns to left
     hi_freq = np.pad(hi_freq, ((0, 0), (0, add_column)), mode='constant', constant_values=0)

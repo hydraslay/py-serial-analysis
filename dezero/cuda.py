@@ -1,11 +1,12 @@
 import numpy as np
+from dezero import Variable
+
 gpu_enable = True
 try:
     import cupy as cp
     cupy = cp
 except ImportError:
     gpu_enable = False
-from dezero import Variable
 
 
 def get_array_module(x):

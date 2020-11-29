@@ -52,11 +52,8 @@ def run(config_file):
     winner_net = neat.nn.RecurrentNetwork.create(winner, p.config)
     winner_net.reset()
 
-    output, pred = eval_net(winner_net, market_data(31000, 32000), verbose=True)
-    print(" trained prediction:")
-    print(pred)
     print(" expended prediction:")
-    output, pred = eval_net(winner_net, market_data(32000, 32030), verbose=True, pred=pred)
+    output, pred = eval_net(winner_net, market_data(32000, 32500), verbose=True)
     print(pred)
     # print(len(pred.predict_history))
     # print(pred.predict_history[pred.no_predict:])

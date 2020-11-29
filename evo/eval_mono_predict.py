@@ -1,4 +1,4 @@
-from evo.history_data import read_data
+from evo.history_data import read_one_data
 from evo.operator_mono_predictor import MonoPredictor
 import neat
 
@@ -11,11 +11,11 @@ axis_label = {
 }
 
 
-csv_data = read_data()
+csv_data = read_one_data()
 
 market_inputs = csv_data[31000:32000]
 eval_times = 1
-bulk_size = 1000
+bulk_size = 500
 
 
 def market_data(start, end):
@@ -24,7 +24,7 @@ def market_data(start, end):
 
 def eval_net(net, ticks, verbose=False, pred=None):
     if pred is None:
-        pred = MonoPredictor(1, verbose, no_predict=900, threshold=1, max_low_confidence_tick=6)
+        pred = MonoPredictor(1, verbose, no_predict=460, threshold=1, max_low_confidence_tick=6)
     for market in ticks:
         state = pred.tick_market(market)
         if state <= 0:
