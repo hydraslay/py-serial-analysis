@@ -13,8 +13,6 @@ paths:
       operationId: getRawData
       summary: get RawData
       description: get RawData
-      produces:
-        -application/json
       responses:
         '200':
           description: get RawData
