@@ -1,0 +1,49 @@
+openapi: 3.0.1
+info:
+  title: ts api
+  description: ts api
+  version: 1.0.0
+servers:
+- url: /
+paths:
+  /raw:
+    get:
+      tags:
+      - RawData
+      summary: get RawData
+      description: get RawData
+      operationId: get_raw_data
+      responses:
+        "200":
+          description: get RawData
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RawData'
+                x-content-type: application/json
+      x-openapi-router-controller: swagger_server.controllers.raw_data_controller
+components:
+  schemas:
+    RawData:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        last_login:
+          type: string
+        deleted_at:
+          type: string
+      example:
+        last_login: last_login
+        name: name
+        id: 0
+        deleted_at: deleted_at
+        email: email
+x-original-swagger-version: "2.0"
+
