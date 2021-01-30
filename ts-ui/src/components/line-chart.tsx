@@ -34,7 +34,7 @@ export class SeriesChart extends PureComponent<SeriesChartProp> {
             >
                 <CartesianGrid strokeDasharray="3 3"/>
                 <XAxis xAxisId="hi" dataKey="time" scale={'auto'} domain={[minX, maxX]}/>
-                <YAxis yAxisId="left" scale="auto" domain={[minY, maxY]} />
+                <YAxis yAxisId="left" scale="auto" domain={[minY, maxY]}/>
                 {/*<YAxis yAxisId="right" orientation="right" scale="auto"/>*/}
                 <Tooltip/>
                 {/*<Legend/>*/}

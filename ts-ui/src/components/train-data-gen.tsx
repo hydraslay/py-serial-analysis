@@ -14,15 +14,16 @@ type TrainDataGenProps = {
 
 export const TrainDataGen: React.FC<TrainDataGenProps> = (props) => {
     const all = generateSamples(props.data.hiFreq, props.data.loFreq);
-    const grouped = all.reduce((grp: {[val: number]: SampleDataItem[]}, item) => {
+    const grouped = all.reduce((grp: { [val: number]: SampleDataItem[] }, item) => {
         grp[item.actual] = grp[item.actual] || [];
         grp[item.actual].push(item);
         return grp;
     }, {})
     return (<div>
-        <Tab.Container defaultActiveKey={"g-" + (grouped && Object.keys(grouped).length > 0 ? Object.keys(grouped)[0] : '')}
-              id="tab-sample-charts"
-              transition={false}
+        <Tab.Container
+            defaultActiveKey={"g-" + (grouped && Object.keys(grouped).length > 0 ? Object.keys(grouped)[0] : '')}
+            id="tab-sample-charts"
+            transition={false}
         >
             <Row>
                 <Nav variant="tabs">

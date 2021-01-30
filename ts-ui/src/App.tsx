@@ -51,7 +51,7 @@ export const App: React.FC = () => {
                     id='list-unproved-check'
                 />
             </div>
-            <TrainDataGen data={{hiFreq: state.hiFreq, loFreq: state.loFreq}} />
+            <TrainDataGen data={{hiFreq: state.hiFreq, loFreq: state.loFreq}}/>
         </div>
     );
 }
