@@ -1,7 +1,6 @@
-import React, {PureComponent, useEffect, useState} from 'react';
-import {ButtonGroup, Button, Form} from 'react-bootstrap'
+import React, {useEffect, useState} from 'react';
+import {Form} from 'react-bootstrap'
 import './App.css';
-import {SeriesChart} from "./components/line-chart";
 import {RawDataApi} from './api'
 import {TrainDataGen} from "./components/train-data-gen";
 
