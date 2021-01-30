@@ -1,5 +1,5 @@
 import React, {PureComponent} from 'react';
-import {CartesianGrid, Legend, Line, LineChart, ReferenceLine, Tooltip, XAxis, YAxis,} from 'recharts';
+import {CartesianGrid, Line, LineChart, Tooltip, XAxis, YAxis,} from 'recharts';
 import {RawDataItem} from "../interface";
 
 type SeriesChartProp = {

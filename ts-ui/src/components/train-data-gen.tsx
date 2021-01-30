@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Nav, Row, Tab, Tabs} from "react-bootstrap";
+import {Nav, Row, Tab} from "react-bootstrap";
 import {SeriesChart} from "./line-chart";
 import {RawDataItem, SampleDataItem} from "../interface";
 import {generateSamples} from "../algorithm/sample-gen";
@@ -29,7 +29,7 @@ export const TrainDataGen: React.FC<TrainDataGenProps> = (props) => {
                     {Object.keys(grouped).map((g: string) =>
                         <Nav.Item key={"g-" + g}>
                             <Nav.Link eventKey={"g-" + g}>
-                                <img src={`./${g}.png`} style={{marginRight: '5px'}}/>
+                                <img src={`./${g}.png`} style={{marginRight: '5px'}} alt={g}/>
                                 {'value=' + g}
                                 <br/>
                                 {'count=' + grouped[parseInt(g)].length}
