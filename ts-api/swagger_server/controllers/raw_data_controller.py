@@ -41,7 +41,7 @@ def get_raw_data(interval):  # noqa: E501
         FROM public.market_data
         where type = '{interval}' and timestamp>=1583899000
         order by "timestamp" ASC
-        limit 2000
+        limit 5000
     """.format_map({'interval': interval}))
     return [{
         "timestamp": row[0],

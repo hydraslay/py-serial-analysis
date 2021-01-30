@@ -99,5 +99,5 @@ export function generateSamples(hiFreq: RawDataItem[], loFreq: RawDataItem[]) {
             removeTick(lowStack, i - tickSpan);
         }
     }
-    return samples.slice(0, 30);
+    return samples;
 }
