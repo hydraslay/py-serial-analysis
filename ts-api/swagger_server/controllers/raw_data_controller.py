@@ -26,7 +26,7 @@ def select_execute(con, sql):
     return rows
 
 
-def get_raw_data():  # noqa: E501
+def get_raw_data(interval):  # noqa: E501
     """get RawData
 
     get RawData # noqa: E501
@@ -39,9 +39,10 @@ def get_raw_data():  # noqa: E501
     rows = select_execute(conn, """
         SELECT "timestamp", open, high, low, close, volume
         FROM public.market_data
-        where type = '1'
-        limit 20
-    """)
+        where type = '{interval}' and timestamp>=1583899000
+        order by "timestamp" ASC
+        limit 2000
+    """.format_map({'interval': interval}))
     return [{
         "timestamp": row[0],
         "open": row[1],

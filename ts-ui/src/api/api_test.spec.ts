@@ -22,7 +22,8 @@ describe("RawDataApi", () => {
   });
 
   test("getRawData", () => {
-    return expect(instance.getRawData({})).resolves.toBe(null)
+    const interval: string = "interval_example"
+    return expect(instance.getRawData(interval, {})).resolves.toBe(null)
   })
 })
 

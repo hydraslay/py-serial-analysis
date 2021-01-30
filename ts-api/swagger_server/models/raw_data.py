@@ -14,40 +14,45 @@ class RawData(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, id: int=None, name: str=None, email: str=None, last_login: str=None, deleted_at: str=None):  # noqa: E501
+    def __init__(self, timestamp: int=None, open: float=None, high: float=None, low: float=None, close: float=None, volume: float=None):  # noqa: E501
         """RawData - a model defined in Swagger
 
-        :param id: The id of this RawData.  # noqa: E501
-        :type id: int
-        :param name: The name of this RawData.  # noqa: E501
-        :type name: str
-        :param email: The email of this RawData.  # noqa: E501
-        :type email: str
-        :param last_login: The last_login of this RawData.  # noqa: E501
-        :type last_login: str
-        :param deleted_at: The deleted_at of this RawData.  # noqa: E501
-        :type deleted_at: str
+        :param timestamp: The timestamp of this RawData.  # noqa: E501
+        :type timestamp: int
+        :param open: The open of this RawData.  # noqa: E501
+        :type open: float
+        :param high: The high of this RawData.  # noqa: E501
+        :type high: float
+        :param low: The low of this RawData.  # noqa: E501
+        :type low: float
+        :param close: The close of this RawData.  # noqa: E501
+        :type close: float
+        :param volume: The volume of this RawData.  # noqa: E501
+        :type volume: float
         """
         self.swagger_types = {
-            'id': int,
-            'name': str,
-            'email': str,
-            'last_login': str,
-            'deleted_at': str
+            'timestamp': int,
+            'open': float,
+            'high': float,
+            'low': float,
+            'close': float,
+            'volume': float
         }
 
         self.attribute_map = {
-            'id': 'id',
-            'name': 'name',
-            'email': 'email',
-            'last_login': 'last_login',
-            'deleted_at': 'deleted_at'
+            'timestamp': 'timestamp',
+            'open': 'open',
+            'high': 'high',
+            'low': 'low',
+            'close': 'close',
+            'volume': 'volume'
         }
-        self._id = id
-        self._name = name
-        self._email = email
-        self._last_login = last_login
-        self._deleted_at = deleted_at
+        self._timestamp = timestamp
+        self._open = open
+        self._high = high
+        self._low = low
+        self._close = close
+        self._volume = volume
 
     @classmethod
     def from_dict(cls, dikt) -> 'RawData':
@@ -61,106 +66,127 @@ class RawData(Model):
         return util.deserialize_model(dikt, cls)
 
     @property
-    def id(self) -> int:
-        """Gets the id of this RawData.
+    def timestamp(self) -> int:
+        """Gets the timestamp of this RawData.
 
 
-        :return: The id of this RawData.
+        :return: The timestamp of this RawData.
         :rtype: int
         """
-        return self._id
+        return self._timestamp
 
-    @id.setter
-    def id(self, id: int):
-        """Sets the id of this RawData.
+    @timestamp.setter
+    def timestamp(self, timestamp: int):
+        """Sets the timestamp of this RawData.
 
 
-        :param id: The id of this RawData.
-        :type id: int
+        :param timestamp: The timestamp of this RawData.
+        :type timestamp: int
         """
 
-        self._id = id
+        self._timestamp = timestamp
 
     @property
-    def name(self) -> str:
-        """Gets the name of this RawData.
+    def open(self) -> float:
+        """Gets the open of this RawData.
 
 
-        :return: The name of this RawData.
-        :rtype: str
+        :return: The open of this RawData.
+        :rtype: float
         """
-        return self._name
+        return self._open
 
-    @name.setter
-    def name(self, name: str):
-        """Sets the name of this RawData.
+    @open.setter
+    def open(self, open: float):
+        """Sets the open of this RawData.
 
 
-        :param name: The name of this RawData.
-        :type name: str
+        :param open: The open of this RawData.
+        :type open: float
         """
 
-        self._name = name
+        self._open = open
 
     @property
-    def email(self) -> str:
-        """Gets the email of this RawData.
+    def high(self) -> float:
+        """Gets the high of this RawData.
 
 
-        :return: The email of this RawData.
-        :rtype: str
+        :return: The high of this RawData.
+        :rtype: float
         """
-        return self._email
+        return self._high
 
-    @email.setter
-    def email(self, email: str):
-        """Sets the email of this RawData.
+    @high.setter
+    def high(self, high: float):
+        """Sets the high of this RawData.
 
 
-        :param email: The email of this RawData.
-        :type email: str
+        :param high: The high of this RawData.
+        :type high: float
         """
 
-        self._email = email
+        self._high = high
 
     @property
-    def last_login(self) -> str:
-        """Gets the last_login of this RawData.
+    def low(self) -> float:
+        """Gets the low of this RawData.
 
 
-        :return: The last_login of this RawData.
-        :rtype: str
+        :return: The low of this RawData.
+        :rtype: float
         """
-        return self._last_login
+        return self._low
 
-    @last_login.setter
-    def last_login(self, last_login: str):
-        """Sets the last_login of this RawData.
+    @low.setter
+    def low(self, low: float):
+        """Sets the low of this RawData.
 
 
-        :param last_login: The last_login of this RawData.
-        :type last_login: str
+        :param low: The low of this RawData.
+        :type low: float
         """
 
-        self._last_login = last_login
+        self._low = low
 
     @property
-    def deleted_at(self) -> str:
-        """Gets the deleted_at of this RawData.
+    def close(self) -> float:
+        """Gets the close of this RawData.
 
 
-        :return: The deleted_at of this RawData.
-        :rtype: str
+        :return: The close of this RawData.
+        :rtype: float
         """
-        return self._deleted_at
+        return self._close
 
-    @deleted_at.setter
-    def deleted_at(self, deleted_at: str):
-        """Sets the deleted_at of this RawData.
+    @close.setter
+    def close(self, close: float):
+        """Sets the close of this RawData.
 
 
-        :param deleted_at: The deleted_at of this RawData.
-        :type deleted_at: str
+        :param close: The close of this RawData.
+        :type close: float
         """
 
-        self._deleted_at = deleted_at
+        self._close = close
+
+    @property
+    def volume(self) -> float:
+        """Gets the volume of this RawData.
+
+
+        :return: The volume of this RawData.
+        :rtype: float
+        """
+        return self._volume
+
+    @volume.setter
+    def volume(self, volume: float):
+        """Sets the volume of this RawData.
+
+
+        :param volume: The volume of this RawData.
+        :type volume: float
+        """
+
+        self._volume = volume

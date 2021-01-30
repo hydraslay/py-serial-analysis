@@ -13,6 +13,14 @@ paths:
       summary: get RawData
       description: get RawData
       operationId: get_raw_data
+      parameters:
+      - name: interval
+        in: query
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
       responses:
         "200":
           description: get RawData
@@ -29,21 +37,24 @@ components:
     RawData:
       type: object
       properties:
-        id:
+        timestamp:
           type: integer
-        name:
-          type: string
-        email:
-          type: string
-        last_login:
-          type: string
-        deleted_at:
-          type: string
+        open:
+          type: number
+        high:
+          type: number
+        low:
+          type: number
+        close:
+          type: number
+        volume:
+          type: number
       example:
-        last_login: last_login
-        name: name
-        id: 0
-        deleted_at: deleted_at
-        email: email
+        volume: 2.3021358869347655
+        high: 1.4658129805029452
+        low: 5.962133916683182
+        close: 5.637376656633329
+        open: 6.027456183070403
+        timestamp: 0
 x-original-swagger-version: "2.0"
 

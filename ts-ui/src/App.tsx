@@ -1,8 +1,9 @@
-import React, {PureComponent, useState} from 'react';
+import React, {PureComponent, useEffect, useState} from 'react';
 import {ButtonGroup, Button, Form} from 'react-bootstrap'
 import './App.css';
 import {SeriesChart} from "./components/line-chart";
 import {RawDataApi} from './api'
+import {TrainDataGen} from "./components/train-data-gen";
 
 const rawDataApi = new RawDataApi({
     basePath: 'http://localhost:8080'
@@ -10,16 +11,22 @@ const rawDataApi = new RawDataApi({
 
 export const App: React.FC = () => {
     const [state, setState] = useState({
-        data: [] as any[]
+        hiFreq: [] as any[],
+        loFreq: [] as any[]
     })
-    if (!state.data.length) {
-        rawDataApi.getRawData().then((result) => {
+
+    useEffect(() => {
+        Promise.all([
+            rawDataApi.getRawData('1'),
+            rawDataApi.getRawData('5')
+        ]).then((result) => {
             setState({
-                data: result
+                hiFreq: result[0],
+                loFreq: result[1]
             })
         })
-    }
-    const samples = Array(30).fill({lbl: 1, proved: true})
+    }, []);
+
     return (
         <div className="App">
             <div style={{marginBottom: '50px'}}>
@@ -45,20 +52,7 @@ export const App: React.FC = () => {
                     id='list-unproved-check'
                 />
             </div>
-            {samples.map((sampleItem) => {
-                return <div style={{
-                    display: 'inline-block',
-                    border: '1px dotted lightgray',
-                    background: sampleItem.proved ? 'white' : 'lightyellow'
-                }}>
-                    <ButtonGroup vertical style={{verticalAlign: 'middle', marginLeft: '10px'}}>
-                        <Button variant={sampleItem.lbl === 1 ? 'success' : 'outline-success'}>Rise</Button>
-                        <Button variant={sampleItem.lbl === 2 ? 'danger' : 'outline-danger'}>Drop</Button>
-                        <Button variant={sampleItem.lbl === 3 ? 'warning' : 'outline-warning'}>Flat</Button>
-                    </ButtonGroup>
-                    <SeriesChart data={state.data}/>
-                </div>
-            })}
+            <TrainDataGen data={{hiFreq: state.hiFreq, loFreq: state.loFreq}}></TrainDataGen>
         </div>
     );
 }

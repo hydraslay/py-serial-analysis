@@ -13,6 +13,11 @@ paths:
       operationId: getRawData
       summary: get RawData
       description: get RawData
+      parameters:
+        - in: query
+          name: interval
+          type: string
+          required: true
       responses:
         '200':
           description: get RawData
@@ -25,13 +30,15 @@ definitions:
   RawData:
     type: object
     properties:
-      id:
+      timestamp:
         type: integer
-      name:
-        type: string
-      email:
-        type: string
-      last_login:
-        type: string
-      deleted_at:
-        type: string
+      open:
+        type: number
+      high:
+        type: number
+      low:
+        type: number
+      close:
+        type: number
+      volume:
+        type: number

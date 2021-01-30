@@ -1,31 +1,30 @@
 import React, {PureComponent} from 'react';
 import {CartesianGrid, Legend, Line, LineChart, ReferenceLine, Tooltip, XAxis, YAxis,} from 'recharts';
+import {RawDataItem} from "../interface";
 
 type SeriesChartProp = {
-    data: {
-        timestamp: number;
-        open: number;
-        high: number;
-        low: number;
-        close: number;
-        volume: number;
-    }[]
+    data: RawDataItem[]
 }
 
 export class SeriesChart extends PureComponent<SeriesChartProp> {
     render() {
-        let min = 999
-        let max = 0
+        let minY = 999, maxY = 0, minX = '0', maxX = '0'
         return (
             <LineChart
                 width={400}
                 height={200}
-                data={this.props.data.map((item) => {
-                    min = item.close < min ? item.close : min
-                    max = item.close > max ? item.close : max
+                data={this.props.data.map((item, i) => {
+                    minY = item.low < minY ? item.low : minY
+                    maxY = item.high > maxY ? item.high : maxY
+                    const dt = new Date(item.timestamp * 1000);
+                    const time = dt.getHours() + ':' + (dt.getMinutes() >= 10 ? dt.getMinutes() : '0' + dt.getMinutes())
+                    if (i === 0) {
+                        minX = time
+                    }
+                    maxX = time
                     return {
-                        timestamp: item.timestamp,
-                        close: item.close
+                        ...item,
+                        time
                     }
                 })}
                 margin={{
@@ -34,14 +33,19 @@ export class SeriesChart extends PureComponent<SeriesChartProp> {
                 style={{display: 'inline-block'}}
             >
                 <CartesianGrid strokeDasharray="3 3"/>
-                <XAxis dataKey="timestamp"/>
-                <YAxis yAxisId="left" scale="auto" domain={[min, max]} />
+                <XAxis xAxisId="hi" dataKey="time" scale={'auto'} domain={[minX, maxX]}/>
+                <YAxis yAxisId="left" scale="auto" domain={[minY, maxY]} />
                 {/*<YAxis yAxisId="right" orientation="right" scale="auto"/>*/}
                 <Tooltip/>
-                <Legend/>
-                {/*<ReferenceLine x="4" stroke="gray"/>*/}
+                {/*<Legend/>*/}
+                {/*{*/}
+                {/*    this.props.data && this.props.data.length*/}
+                {/*        ? <ReferenceLine xAxisId="hi" x={this.props.data[this.props.data.length - 2].timestamp} stroke="gray"/>*/}
+                {/*        : null*/}
+                {/*}*/}
                 {/*<ReferenceLine y={1890} stroke="red"/>*/}
-                <Line type="monotone" yAxisId="left" dataKey="close" stroke="#8884d8"/>
+                <Line type="monotone" xAxisId="hi" yAxisId="left" dataKey="high" stroke="#b83418"/>
+                <Line type="monotone" xAxisId="hi" yAxisId="left" dataKey="low" stroke="#36aa09"/>
                 {/*<Line type="monotone" yAxisId="right" dataKey="volume" stroke="#82ca9d"/>*/}
             </LineChart>
         );
