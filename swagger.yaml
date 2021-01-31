@@ -18,6 +18,14 @@ paths:
           name: interval
           type: string
           required: true
+        - in: query
+          name: start
+          type: number
+          required: true
+        - in: query
+          name: end
+          type: number
+          required: true
       responses:
         '200':
           description: get RawData

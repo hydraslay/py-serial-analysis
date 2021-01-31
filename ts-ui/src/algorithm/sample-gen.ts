@@ -2,8 +2,8 @@ import {RawDataItem, SampleDataItem} from "../interface";
 
 type SortedStack = number[][];
 
-const threshold = 0.02
-const tickSpan = 15
+const threshold = 0.015
+const tickSpan = 9
 
 function removeTick(stack: SortedStack, index: number) {
     const i = stack.findIndex((item) => item[0] === index);
@@ -24,25 +24,16 @@ function addLow(stack: SortedStack, index: number, tick: RawDataItem) {
     stack.push(newItem);
 }
 
-function getValueByLowest(tickHi: RawDataItem, tickLo: RawDataItem, threshold: number) {
-    const hiThresh = tickHi.low + threshold;
-    const loThresh = tickHi.low - threshold;
-    if (tickLo.high <= loThresh) {
-        return 1;
+function addHigh(stack: SortedStack, index: number, tick: RawDataItem) {
+    const newItem = [index, tick.high];
+    if (stack.length > 0) {
+        const i = stack.findIndex((item) => tick.high > item[1]);
+        if (i >= 0) {
+            stack.splice(i, 0, newItem);
+            return;
+        }
     }
-    if (tickLo.high <= hiThresh && tickLo.high >= loThresh && tickLo.low <= loThresh) {
-        return 2;
-    }
-    if (tickLo.high >= hiThresh && tickLo.low <= loThresh) {
-        return 4;
-    }
-    if (tickLo.high >= hiThresh && tickLo.low >= loThresh && tickLo.low <= hiThresh) {
-        return 5;
-    }
-    if (tickLo.low >= hiThresh) {
-        return 6;
-    }
-    return 3;
+    stack.push(newItem);
 }
 
 function getValueByRange(tickHi: RawDataItem, tickLo: RawDataItem, threshold: number) {
@@ -80,15 +71,20 @@ export function generateSamples(hiFreq: RawDataItem[], loFreq: RawDataItem[]) {
 
     const samples: SampleDataItem[] = [];
     const lowStack: SortedStack = [];
+    const highStack: SortedStack = [];
     let indicatorLo = 0;
     for (let i = startHi; i < hiFreq.length; i++) {
         const tick = hiFreq[i];
         while (loFreq[indicatorLo].timestamp <= tick.timestamp) {
             indicatorLo++;
+            if (indicatorLo >= loFreq.length - 1) {
+                return samples;
+            }
         }
         addLow(lowStack, i, tick)
+        addHigh(highStack, i, tick)
         if (i >= tickSpan) {
-            if (lowStack[0][0] == i) {
+            if (lowStack[0][0] == i || highStack[0][0] == i) {
                 const val = getValueByRange(tick, loFreq[indicatorLo], threshold);
                 samples.push({
                     hiFreq: hiFreq.slice(i - tickSpan, i + 1),
@@ -97,6 +93,7 @@ export function generateSamples(hiFreq: RawDataItem[], loFreq: RawDataItem[]) {
                 })
             }
             removeTick(lowStack, i - tickSpan);
+            removeTick(highStack, i - tickSpan);
         }
     }
     return samples;

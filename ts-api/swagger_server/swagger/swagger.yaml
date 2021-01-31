@@ -21,6 +21,20 @@ paths:
         explode: true
         schema:
           type: string
+      - name: start
+        in: query
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: number
+      - name: end
+        in: query
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: number
       responses:
         "200":
           description: get RawData
@@ -78,8 +92,8 @@ components:
       type: object
       properties:
         timestamp:
-          type: integer
+          type: string
       example:
-        timestamp: 0
+        timestamp: timestamp
 x-original-swagger-version: "2.0"
 

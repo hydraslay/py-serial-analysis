@@ -6,14 +6,12 @@ import {RawDataItem, SampleDataItem} from "../interface";
 import {generateSamples} from "../algorithm/sample-gen";
 
 type TrainDataGenProps = {
-    data: {
-        hiFreq: RawDataItem[];
-        loFreq: RawDataItem[];
-    }
+    hiFreq: RawDataItem[];
+    loFreq: RawDataItem[];
 }
 
 export const TrainDataGen: React.FC<TrainDataGenProps> = (props) => {
-    const all = generateSamples(props.data.hiFreq, props.data.loFreq);
+    const all = generateSamples(props.hiFreq, props.loFreq);
     const grouped = all.reduce((grp: { [val: number]: SampleDataItem[] }, item) => {
         grp[item.actual] = grp[item.actual] || [];
         grp[item.actual].push(item);
@@ -31,9 +29,9 @@ export const TrainDataGen: React.FC<TrainDataGenProps> = (props) => {
                         <Nav.Item key={"g-" + g}>
                             <Nav.Link eventKey={"g-" + g}>
                                 <img src={`/${g}.png`} style={{marginRight: '5px'}} alt={g}/>
-                                {'value=' + g}
+                                {'val=' + g}
                                 <br/>
-                                {'count=' + grouped[parseInt(g)].length}
+                                {'cnt=' + grouped[parseInt(g)].length}
                             </Nav.Link>
                         </Nav.Item>)}
                 </Nav>

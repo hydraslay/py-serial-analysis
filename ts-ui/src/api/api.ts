@@ -84,7 +84,7 @@ export class RequiredError extends Error {
 export interface MarketBreakPoint {
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof MarketBreakPoint
      */
     timestamp?: string;
@@ -165,13 +165,23 @@ export const RawDataApiFetchParamCreator = function (configuration?: Configurati
          * get RawData
          * @summary get RawData
          * @param {string} interval 
+         * @param {number} start 
+         * @param {number} end 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getRawData(interval: string, options: any = {}): FetchArgs {
+        getRawData(interval: string, start: number, end: number, options: any = {}): FetchArgs {
             // verify required parameter 'interval' is not null or undefined
             if (interval === null || interval === undefined) {
                 throw new RequiredError('interval','Required parameter interval was null or undefined when calling getRawData.');
+            }
+            // verify required parameter 'start' is not null or undefined
+            if (start === null || start === undefined) {
+                throw new RequiredError('start','Required parameter start was null or undefined when calling getRawData.');
+            }
+            // verify required parameter 'end' is not null or undefined
+            if (end === null || end === undefined) {
+                throw new RequiredError('end','Required parameter end was null or undefined when calling getRawData.');
             }
             const localVarPath = `/raw`;
             const localVarUrlObj = url.parse(localVarPath, true);
@@ -181,6 +191,14 @@ export const RawDataApiFetchParamCreator = function (configuration?: Configurati
 
             if (interval !== undefined) {
                 localVarQueryParameter['interval'] = interval;
+            }
+
+            if (start !== undefined) {
+                localVarQueryParameter['start'] = start;
+            }
+
+            if (end !== undefined) {
+                localVarQueryParameter['end'] = end;
             }
 
             localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
@@ -224,11 +242,13 @@ export const RawDataApiFp = function(configuration?: Configuration) {
          * get RawData
          * @summary get RawData
          * @param {string} interval 
+         * @param {number} start 
+         * @param {number} end 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getRawData(interval: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<RawData>> {
-            const localVarFetchArgs = RawDataApiFetchParamCreator(configuration).getRawData(interval, options);
+        getRawData(interval: string, start: number, end: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<RawData>> {
+            const localVarFetchArgs = RawDataApiFetchParamCreator(configuration).getRawData(interval, start, end, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -261,11 +281,13 @@ export const RawDataApiFactory = function (configuration?: Configuration, fetch?
          * get RawData
          * @summary get RawData
          * @param {string} interval 
+         * @param {number} start 
+         * @param {number} end 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getRawData(interval: string, options?: any) {
-            return RawDataApiFp(configuration).getRawData(interval, options)(fetch, basePath);
+        getRawData(interval: string, start: number, end: number, options?: any) {
+            return RawDataApiFp(configuration).getRawData(interval, start, end, options)(fetch, basePath);
         },
     };
 };
@@ -292,12 +314,14 @@ export class RawDataApi extends BaseAPI {
      * get RawData
      * @summary get RawData
      * @param {string} interval 
+     * @param {number} start 
+     * @param {number} end 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof RawDataApi
      */
-    public getRawData(interval: string, options?: any) {
-        return RawDataApiFp(this.configuration).getRawData(interval, options)(this.fetch, this.basePath);
+    public getRawData(interval: string, start: number, end: number, options?: any) {
+        return RawDataApiFp(this.configuration).getRawData(interval, start, end, options)(this.fetch, this.basePath);
     }
 
 }

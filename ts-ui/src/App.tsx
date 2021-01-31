@@ -20,8 +20,8 @@ export const App: React.FC = () => {
             <BreakPointList
                 onChange={(bp) => {
                     Promise.all([
-                        rawDataApi.getRawData('1', bp.start, bp.end),
-                        rawDataApi.getRawData('5', bp.start, bp.end)
+                        rawDataApi.getRawData('5', bp.start / 1000, bp.end / 1000),
+                        rawDataApi.getRawData('15', bp.start / 1000, bp.end / 1000)
                     ]).then((result) => {
                         setState({
                             hiFreq: result[0],
@@ -29,7 +29,7 @@ export const App: React.FC = () => {
                         })
                     })
             }} />
-            <TrainDataGen data={{hiFreq: state.hiFreq, loFreq: state.loFreq}}/>
+            <TrainDataGen hiFreq={state.hiFreq} loFreq={state.loFreq}/>
         </div>
     );
 }
