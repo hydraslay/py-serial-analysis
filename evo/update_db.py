@@ -3,7 +3,7 @@ import os
 import pandas as pd
 from dateutil.parser import parse
 
-interval = '15'
+interval = '5'
 
 def connect():
     con = psycopg2.connect("host=" + "localhost" +

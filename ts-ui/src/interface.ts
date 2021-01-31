@@ -7,3 +7,9 @@ export type SampleDataItem = {
     nextLowFreq: RawDataItem;
     actual: number;
 }
+
+export type BreakPoint = {
+    label: string;
+    start: number;
+    end: number;
+}

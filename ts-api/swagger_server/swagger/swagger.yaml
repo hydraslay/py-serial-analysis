@@ -32,6 +32,24 @@ paths:
                   $ref: '#/components/schemas/RawData'
                 x-content-type: application/json
       x-openapi-router-controller: swagger_server.controllers.raw_data_controller
+  /market_break_points:
+    get:
+      tags:
+      - RawData
+      summary: get Market Break Points
+      description: get Market Break Points
+      operationId: get_market_break_point
+      responses:
+        "200":
+          description: get Market Break Points
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MarketBreakPoint'
+                x-content-type: application/json
+      x-openapi-router-controller: swagger_server.controllers.raw_data_controller
 components:
   schemas:
     RawData:
@@ -55,6 +73,13 @@ components:
         low: 5.962133916683182
         close: 5.637376656633329
         open: 6.027456183070403
+        timestamp: 0
+    MarketBreakPoint:
+      type: object
+      properties:
+        timestamp:
+          type: integer
+      example:
         timestamp: 0
 x-original-swagger-version: "2.0"
 

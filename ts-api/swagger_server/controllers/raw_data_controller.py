@@ -26,7 +26,7 @@ def select_execute(con, sql):
     return rows
 
 
-def get_raw_data(interval):  # noqa: E501
+def get_raw_data(interval, start, end):  # noqa: E501
     """get RawData
 
     get RawData # noqa: E501
@@ -39,10 +39,13 @@ def get_raw_data(interval):  # noqa: E501
     rows = select_execute(conn, """
         SELECT "timestamp", open, high, low, close, volume
         FROM public.market_data
-        where type = '{interval}' and timestamp>=1583899000
+        where type = '{interval}' and timestamp>={start} and timestamp<={end}
         order by "timestamp" ASC
-        limit 5000
-    """.format_map({'interval': interval}))
+    """.format_map({
+        'interval': interval,
+        'start': start,
+        'end': end
+    }))
     return [{
         "timestamp": row[0],
         "open": row[1],
@@ -52,3 +55,26 @@ def get_raw_data(interval):  # noqa: E501
         "volume": row[5]
     } for row in rows]
 
+
+def get_market_break_point():
+    conn = connect()
+    rows = select_execute(conn, """
+        select dt.date
+        from
+            (
+                select to_char(i::date, 'YYYY/MM/DD') as date 
+                from generate_series('2020-02-01', CURRENT_DATE, '1 day'::interval) i
+            ) dt
+            left outer join
+            (
+                SELECT type, to_char(to_timestamp("timestamp"), 'YYYY/MM/DD') as ymd
+                FROM public.market_data
+                where type ='5'
+                group by type, ymd
+            ) raw on dt.date=raw.ymd
+            where raw.ymd is null
+            order by dt.date
+        """)
+    return [{
+        "timestamp": row[0]
+    } for row in rows]

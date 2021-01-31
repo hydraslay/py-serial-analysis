@@ -3,6 +3,7 @@ import {Form} from 'react-bootstrap'
 import './App.css';
 import {RawDataApi} from './api'
 import {TrainDataGen} from "./components/train-data-gen";
+import {BreakPointList} from "./components/break-point-list";
 
 const rawDataApi = new RawDataApi({
     basePath: 'http://localhost:8080'
@@ -14,43 +15,20 @@ export const App: React.FC = () => {
         loFreq: [] as any[]
     })
 
-    useEffect(() => {
-        Promise.all([
-            rawDataApi.getRawData('1'),
-            rawDataApi.getRawData('5')
-        ]).then((result) => {
-            setState({
-                hiFreq: result[0],
-                loFreq: result[1]
-            })
-        })
-    }, []);
-
     return (
         <div className="App">
-            <div style={{marginBottom: '50px'}}>
-                <Form.Check
-                    custom
-                    inline
-                    label="All"
-                    type='checkbox'
-                    id='list-all-check'
-                />
-                <Form.Check
-                    custom
-                    inline
-                    label="Proved"
-                    type='checkbox'
-                    id='list-proved-check'
-                />
-                <Form.Check
-                    custom
-                    inline
-                    label="Unproved"
-                    type='checkbox'
-                    id='list-unproved-check'
-                />
-            </div>
+            <BreakPointList
+                onChange={(bp) => {
+                    Promise.all([
+                        rawDataApi.getRawData('1', bp.start, bp.end),
+                        rawDataApi.getRawData('5', bp.start, bp.end)
+                    ]).then((result) => {
+                        setState({
+                            hiFreq: result[0],
+                            loFreq: result[1]
+                        })
+                    })
+            }} />
             <TrainDataGen data={{hiFreq: state.hiFreq, loFreq: state.loFreq}}/>
         </div>
     );

@@ -21,6 +21,9 @@ describe("RawDataApi", () => {
     instance = new api.RawDataApi(config)
   });
 
+  test("getMarketBreakPoint", () => {
+    return expect(instance.getMarketBreakPoint({})).resolves.toBe(null)
+  })
   test("getRawData", () => {
     const interval: string = "interval_example"
     return expect(instance.getRawData(interval, {})).resolves.toBe(null)

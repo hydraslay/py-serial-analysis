@@ -79,6 +79,19 @@ export class RequiredError extends Error {
 /**
  * 
  * @export
+ * @interface MarketBreakPoint
+ */
+export interface MarketBreakPoint {
+    /**
+     * 
+     * @type {number}
+     * @memberof MarketBreakPoint
+     */
+    timestamp?: string;
+}
+/**
+ * 
+ * @export
  * @interface RawData
  */
 export interface RawData {
@@ -126,6 +139,29 @@ export interface RawData {
 export const RawDataApiFetchParamCreator = function (configuration?: Configuration) {
     return {
         /**
+         * get Market Break Points
+         * @summary get Market Break Points
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getMarketBreakPoint(options: any = {}): FetchArgs {
+            const localVarPath = `/market_break_points`;
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete localVarUrlObj.search;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * get RawData
          * @summary get RawData
          * @param {string} interval 
@@ -167,6 +203,24 @@ export const RawDataApiFetchParamCreator = function (configuration?: Configurati
 export const RawDataApiFp = function(configuration?: Configuration) {
     return {
         /**
+         * get Market Break Points
+         * @summary get Market Break Points
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getMarketBreakPoint(options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<MarketBreakPoint>> {
+            const localVarFetchArgs = RawDataApiFetchParamCreator(configuration).getMarketBreakPoint(options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+        /**
          * get RawData
          * @summary get RawData
          * @param {string} interval 
@@ -195,6 +249,15 @@ export const RawDataApiFp = function(configuration?: Configuration) {
 export const RawDataApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
     return {
         /**
+         * get Market Break Points
+         * @summary get Market Break Points
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getMarketBreakPoint(options?: any) {
+            return RawDataApiFp(configuration).getMarketBreakPoint(options)(fetch, basePath);
+        },
+        /**
          * get RawData
          * @summary get RawData
          * @param {string} interval 
@@ -214,6 +277,17 @@ export const RawDataApiFactory = function (configuration?: Configuration, fetch?
  * @extends {BaseAPI}
  */
 export class RawDataApi extends BaseAPI {
+    /**
+     * get Market Break Points
+     * @summary get Market Break Points
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof RawDataApi
+     */
+    public getMarketBreakPoint(options?: any) {
+        return RawDataApiFp(this.configuration).getMarketBreakPoint(options)(this.fetch, this.basePath);
+    }
+
     /**
      * get RawData
      * @summary get RawData

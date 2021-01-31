@@ -26,6 +26,21 @@ paths:
             items:
               $ref: '#/definitions/RawData'
 
+  /market_break_points:
+    get:
+      tags:
+        - RawData
+      operationId: getMarketBreakPoint
+      summary: get Market Break Points
+      description: get Market Break Points
+      responses:
+        '200':
+          description: get Market Break Points
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/MarketBreakPoint'
+
 definitions:
   RawData:
     type: object
@@ -42,3 +57,9 @@ definitions:
         type: number
       volume:
         type: number
+
+  MarketBreakPoint:
+    type: object
+    properties:
+      timestamp:
+        type: string
