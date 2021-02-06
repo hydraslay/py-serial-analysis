@@ -92,6 +92,25 @@ export interface MarketBreakPoint {
 /**
  * 
  * @export
+ * @interface MarketBreakPointResponse
+ */
+export interface MarketBreakPointResponse {
+    /**
+     * 
+     * @type {Array<MarketBreakPoint>}
+     * @memberof MarketBreakPointResponse
+     */
+    data?: Array<MarketBreakPoint>;
+    /**
+     * 
+     * @type {string}
+     * @memberof MarketBreakPointResponse
+     */
+    queryString?: string;
+}
+/**
+ * 
+ * @export
  * @interface RawData
  */
 export interface RawData {
@@ -131,6 +150,25 @@ export interface RawData {
      * @memberof RawData
      */
     volume?: number;
+}
+/**
+ * 
+ * @export
+ * @interface RawDataResponse
+ */
+export interface RawDataResponse {
+    /**
+     * 
+     * @type {Array<RawData>}
+     * @memberof RawDataResponse
+     */
+    data?: Array<RawData>;
+    /**
+     * 
+     * @type {string}
+     * @memberof RawDataResponse
+     */
+    queryString?: string;
 }
 /**
  * RawDataApi - fetch parameter creator
@@ -226,7 +264,7 @@ export const RawDataApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getMarketBreakPoint(options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<MarketBreakPoint>> {
+        getMarketBreakPoint(options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<MarketBreakPointResponse> {
             const localVarFetchArgs = RawDataApiFetchParamCreator(configuration).getMarketBreakPoint(options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
@@ -247,7 +285,7 @@ export const RawDataApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getRawData(interval: string, start: number, end: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<RawData>> {
+        getRawData(interval: string, start: number, end: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<RawDataResponse> {
             const localVarFetchArgs = RawDataApiFetchParamCreator(configuration).getRawData(interval, start, end, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {

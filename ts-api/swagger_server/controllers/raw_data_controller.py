@@ -1,12 +1,4 @@
-import connexion
-import six
-
-from swagger_server.models.raw_data import RawData  # noqa: E501
-from swagger_server import util
 import psycopg2
-import os
-import pandas as pd
-from dateutil.parser import parse
 
 
 def connect():
@@ -36,7 +28,7 @@ def get_raw_data(interval, start, end):  # noqa: E501
     """
 
     conn = connect()
-    rows = select_execute(conn, """
+    sql = """
         SELECT "timestamp", open, high, low, close, volume
         FROM public.market_data
         where type = '{interval}' and timestamp>={start} and timestamp<={end}
@@ -45,20 +37,24 @@ def get_raw_data(interval, start, end):  # noqa: E501
         'interval': interval,
         'start': start,
         'end': end
-    }))
-    return [{
-        "timestamp": row[0],
-        "open": row[1],
-        "high": row[2],
-        "low": row[3],
-        "close": row[4],
-        "volume": row[5]
-    } for row in rows]
+    })
+    rows = select_execute(conn, sql)
+    return {
+        'data': [{
+            "timestamp": row[0],
+            "open": row[1],
+            "high": row[2],
+            "low": row[3],
+            "close": row[4],
+            "volume": row[5]
+        } for row in rows],
+        'query_string': sql
+    }
 
 
 def get_market_break_point():
     conn = connect()
-    rows = select_execute(conn, """
+    sql = """
         select dt.date
         from
             (
@@ -74,7 +70,11 @@ def get_market_break_point():
             ) raw on dt.date=raw.ymd
             where raw.ymd is null
             order by dt.date
-        """)
-    return [{
-        "timestamp": row[0]
-    } for row in rows]
+        """
+    rows = select_execute(conn, sql)
+    return {
+        'data': [{
+            "timestamp": row[0]
+        } for row in rows],
+        'query_string': sql
+    }

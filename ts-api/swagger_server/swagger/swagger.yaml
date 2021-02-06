@@ -41,10 +41,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/RawData'
-                x-content-type: application/json
+                $ref: '#/components/schemas/RawDataResponse'
       x-openapi-router-controller: swagger_server.controllers.raw_data_controller
   /market_break_points:
     get:
@@ -59,13 +56,34 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/MarketBreakPoint'
-                x-content-type: application/json
+                $ref: '#/components/schemas/MarketBreakPointResponse'
       x-openapi-router-controller: swagger_server.controllers.raw_data_controller
 components:
   schemas:
+    RawDataResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/RawData'
+        query_string:
+          type: string
+      example:
+        data:
+        - volume: 2.3021358869347655
+          high: 1.4658129805029452
+          low: 5.962133916683182
+          close: 5.637376656633329
+          open: 6.027456183070403
+          timestamp: 0
+        - volume: 2.3021358869347655
+          high: 1.4658129805029452
+          low: 5.962133916683182
+          close: 5.637376656633329
+          open: 6.027456183070403
+          timestamp: 0
+        query_string: query_string
     RawData:
       type: object
       properties:
@@ -88,6 +106,20 @@ components:
         close: 5.637376656633329
         open: 6.027456183070403
         timestamp: 0
+    MarketBreakPointResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/MarketBreakPoint'
+        query_string:
+          type: string
+      example:
+        data:
+        - timestamp: timestamp
+        - timestamp: timestamp
+        query_string: query_string
     MarketBreakPoint:
       type: object
       properties:

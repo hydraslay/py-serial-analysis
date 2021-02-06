@@ -1,5 +1,6 @@
 import {BreakPoint, RawDataItem} from "../interface";
 import React, {useEffect, useState} from "react";
+import moment from 'moment';
 import {RawDataApi} from '../api'
 import {DropdownButton, InputGroup, Dropdown} from "react-bootstrap";
 
@@ -22,14 +23,16 @@ export const BreakPointList: React.FC<BreakPointListProp> = (props) => {
         rawDataApi.getMarketBreakPoint().then((result) => {
             let start: string = '';
             setState({
-                breakPoints: result.reduce((arr: BreakPoint[], item) => {
+                breakPoints: result!.data!.reduce((arr: BreakPoint[], item) => {
                     const curr = item.timestamp!;
                     if (start) {
-                        arr.push({
-                            label: `${start} ~ ${item.timestamp}`,
-                            start: new Date(start).valueOf(),
-                            end: new Date(curr).valueOf()
-                        })
+                        if (!moment(start, "YYYY-MM-DD").add(1, 'days').isSame(curr)) {
+                            arr.push({
+                                label: `${start} ~ ${item.timestamp}`,
+                                start: new Date(start).valueOf(),
+                                end: new Date(curr).valueOf()
+                            })
+                        }
                     }
                     start = curr;
                     return arr;

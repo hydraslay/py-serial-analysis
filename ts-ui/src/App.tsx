@@ -19,13 +19,17 @@ export const App: React.FC = () => {
         <div className="App">
             <BreakPointList
                 onChange={(bp) => {
+                    setState({
+                        hiFreq: [],
+                        loFreq: []
+                    });
                     Promise.all([
                         rawDataApi.getRawData('5', bp.start / 1000, bp.end / 1000),
                         rawDataApi.getRawData('15', bp.start / 1000, bp.end / 1000)
                     ]).then((result) => {
                         setState({
-                            hiFreq: result[0],
-                            loFreq: result[1]
+                            hiFreq: result[0].data!,
+                            loFreq: result[1].data!
                         })
                     })
             }} />
