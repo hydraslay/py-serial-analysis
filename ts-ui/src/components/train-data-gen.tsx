@@ -28,7 +28,6 @@ export const TrainDataGen: React.FC<TrainDataGenProps> = (props) => {
                     {Object.keys(grouped).map((g: string) =>
                         <Nav.Item key={"g-" + g}>
                             <Nav.Link eventKey={"g-" + g}>
-                                <img src={`/${g}.png`} style={{marginRight: '5px'}} alt={g}/>
                                 {'val=' + g}
                                 <br/>
                                 {'cnt=' + grouped[parseInt(g)].length}

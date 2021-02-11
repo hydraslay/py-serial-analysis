@@ -36,7 +36,7 @@ function addHigh(stack: SortedStack, index: number, tick: RawDataItem) {
     stack.push(newItem);
 }
 
-function getValueByRange(tickHi: RawDataItem, tickLo: RawDataItem, threshold: number) {
+function get9ValueByRange(tickHi: RawDataItem, tickLo: RawDataItem, threshold: number) {
     let val = 0
     if (tickLo.high > tickHi.high + threshold) {
         val += 6;
@@ -53,6 +53,16 @@ function getValueByRange(tickHi: RawDataItem, tickLo: RawDataItem, threshold: nu
         val += 2;
     }
     return val;
+}
+
+
+function get3ValueByRange(tickHi: RawDataItem, tickLo: RawDataItem, threshold: number) {
+    if (tickLo.low > tickHi.low && tickLo.high > tickHi.high) {
+        return 2
+    } else if (tickLo.low < tickHi.low && tickLo.high < tickHi.high) {
+        return 0
+    }
+    return 1;
 }
 
 export function generateSamples(hiFreq: RawDataItem[], loFreq: RawDataItem[]) {
@@ -85,7 +95,7 @@ export function generateSamples(hiFreq: RawDataItem[], loFreq: RawDataItem[]) {
         addHigh(highStack, i, tick)
         if (i >= tickSpan) {
             if (lowStack[0][0] == i || highStack[0][0] == i) {
-                const val = getValueByRange(tick, loFreq[indicatorLo], threshold);
+                const val = get3ValueByRange(tick, loFreq[indicatorLo], threshold);
                 samples.push({
                     hiFreq: hiFreq.slice(i - tickSpan, i + 1),
                     nextLowFreq: loFreq[indicatorLo],
