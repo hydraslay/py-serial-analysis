@@ -111,6 +111,31 @@ export interface MarketBreakPointResponse {
 /**
  * 
  * @export
+ * @interface Model
+ */
+export interface Model {
+    /**
+     * 
+     * @type {string}
+     * @memberof Model
+     */
+    model?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Model
+     */
+    description?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Model
+     */
+    params?: string;
+}
+/**
+ * 
+ * @export
  * @interface RawData
  */
 export interface RawData {
@@ -169,6 +194,318 @@ export interface RawDataResponse {
      * @memberof RawDataResponse
      */
     queryString?: string;
+}
+/**
+ * 
+ * @export
+ * @interface SampleTypes
+ */
+export interface SampleTypes {
+    /**
+     * 
+     * @type {string}
+     * @memberof SampleTypes
+     */
+    type?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SampleTypes
+     */
+    description?: string;
+}
+/**
+ * 
+ * @export
+ * @interface Samples
+ */
+export interface Samples {
+    /**
+     * 
+     * @type {number}
+     * @memberof Samples
+     */
+    id?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof Samples
+     */
+    from?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof Samples
+     */
+    to?: number;
+    /**
+     * 
+     * @type {Array<RawData>}
+     * @memberof Samples
+     */
+    sampleData?: Array<RawData>;
+    /**
+     * 
+     * @type {number}
+     * @memberof Samples
+     */
+    value?: number;
+}
+/**
+ * 
+ * @export
+ * @interface SamplesRequest
+ */
+export interface SamplesRequest extends Array<Samples> {
+}
+/**
+ * 
+ * @export
+ * @interface SamplesResponse
+ */
+export interface SamplesResponse {
+    /**
+     * 
+     * @type {Array<Samples>}
+     * @memberof SamplesResponse
+     */
+    data?: Array<Samples>;
+    /**
+     * 
+     * @type {string}
+     * @memberof SamplesResponse
+     */
+    queryString?: string;
+}
+/**
+ * ModelApi - fetch parameter creator
+ * @export
+ */
+export const ModelApiFetchParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * get Model list
+         * @summary get Model list
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getModels(options: any = {}): FetchArgs {
+            const localVarPath = `/models`;
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete localVarUrlObj.search;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * get sample type list
+         * @summary get sample type list
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getSampleTypes(options: any = {}): FetchArgs {
+            const localVarPath = `/sample_types`;
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete localVarUrlObj.search;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * add or update Model
+         * @summary add or update Model
+         * @param {Model} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        setModel(body: Model, options: any = {}): FetchArgs {
+            // verify required parameter 'body' is not null or undefined
+            if (body === null || body === undefined) {
+                throw new RequiredError('body','Required parameter body was null or undefined when calling setModel.');
+            }
+            const localVarPath = `/models`;
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'POST' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarHeaderParameter['Content-Type'] = '*/*';
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete localVarUrlObj.search;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            const needsSerialization = (<any>"Model" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(body || {}) : (body || "");
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * ModelApi - functional programming interface
+ * @export
+ */
+export const ModelApiFp = function(configuration?: Configuration) {
+    return {
+        /**
+         * get Model list
+         * @summary get Model list
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getModels(options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Model> {
+            const localVarFetchArgs = ModelApiFetchParamCreator(configuration).getModels(options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+        /**
+         * get sample type list
+         * @summary get sample type list
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getSampleTypes(options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<SampleTypes> {
+            const localVarFetchArgs = ModelApiFetchParamCreator(configuration).getSampleTypes(options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+        /**
+         * add or update Model
+         * @summary add or update Model
+         * @param {Model} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        setModel(body: Model, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+            const localVarFetchArgs = ModelApiFetchParamCreator(configuration).setModel(body, options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response;
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+    }
+};
+
+/**
+ * ModelApi - factory interface
+ * @export
+ */
+export const ModelApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
+    return {
+        /**
+         * get Model list
+         * @summary get Model list
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getModels(options?: any) {
+            return ModelApiFp(configuration).getModels(options)(fetch, basePath);
+        },
+        /**
+         * get sample type list
+         * @summary get sample type list
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getSampleTypes(options?: any) {
+            return ModelApiFp(configuration).getSampleTypes(options)(fetch, basePath);
+        },
+        /**
+         * add or update Model
+         * @summary add or update Model
+         * @param {Model} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        setModel(body: Model, options?: any) {
+            return ModelApiFp(configuration).setModel(body, options)(fetch, basePath);
+        },
+    };
+};
+
+/**
+ * ModelApi - object-oriented interface
+ * @export
+ * @class ModelApi
+ * @extends {BaseAPI}
+ */
+export class ModelApi extends BaseAPI {
+    /**
+     * get Model list
+     * @summary get Model list
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ModelApi
+     */
+    public getModels(options?: any) {
+        return ModelApiFp(this.configuration).getModels(options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * get sample type list
+     * @summary get sample type list
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ModelApi
+     */
+    public getSampleTypes(options?: any) {
+        return ModelApiFp(this.configuration).getSampleTypes(options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * add or update Model
+     * @summary add or update Model
+     * @param {Model} body 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ModelApi
+     */
+    public setModel(body: Model, options?: any) {
+        return ModelApiFp(this.configuration).setModel(body, options)(this.fetch, this.basePath);
+    }
+
 }
 /**
  * RawDataApi - fetch parameter creator
@@ -360,6 +697,175 @@ export class RawDataApi extends BaseAPI {
      */
     public getRawData(interval: string, start: number, end: number, options?: any) {
         return RawDataApiFp(this.configuration).getRawData(interval, start, end, options)(this.fetch, this.basePath);
+    }
+
+}
+/**
+ * SampleApi - fetch parameter creator
+ * @export
+ */
+export const SampleApiFetchParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * get Sample list
+         * @summary get Sample list
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getSamples(options: any = {}): FetchArgs {
+            const localVarPath = `/samples`;
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete localVarUrlObj.search;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * add or update sample
+         * @summary add or update sample
+         * @param {Array<Samples>} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        setSampleAndValueData(body: Array<Samples>, options: any = {}): FetchArgs {
+            // verify required parameter 'body' is not null or undefined
+            if (body === null || body === undefined) {
+                throw new RequiredError('body','Required parameter body was null or undefined when calling setSampleAndValueData.');
+            }
+            const localVarPath = `/samples`;
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'POST' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarHeaderParameter['Content-Type'] = '*/*';
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete localVarUrlObj.search;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            const needsSerialization = (<any>"Array&lt;Samples&gt;" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(body || {}) : (body || "");
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * SampleApi - functional programming interface
+ * @export
+ */
+export const SampleApiFp = function(configuration?: Configuration) {
+    return {
+        /**
+         * get Sample list
+         * @summary get Sample list
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getSamples(options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<SamplesResponse> {
+            const localVarFetchArgs = SampleApiFetchParamCreator(configuration).getSamples(options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+        /**
+         * add or update sample
+         * @summary add or update sample
+         * @param {Array<Samples>} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        setSampleAndValueData(body: Array<Samples>, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+            const localVarFetchArgs = SampleApiFetchParamCreator(configuration).setSampleAndValueData(body, options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response;
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+    }
+};
+
+/**
+ * SampleApi - factory interface
+ * @export
+ */
+export const SampleApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
+    return {
+        /**
+         * get Sample list
+         * @summary get Sample list
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getSamples(options?: any) {
+            return SampleApiFp(configuration).getSamples(options)(fetch, basePath);
+        },
+        /**
+         * add or update sample
+         * @summary add or update sample
+         * @param {Array<Samples>} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        setSampleAndValueData(body: Array<Samples>, options?: any) {
+            return SampleApiFp(configuration).setSampleAndValueData(body, options)(fetch, basePath);
+        },
+    };
+};
+
+/**
+ * SampleApi - object-oriented interface
+ * @export
+ * @class SampleApi
+ * @extends {BaseAPI}
+ */
+export class SampleApi extends BaseAPI {
+    /**
+     * get Sample list
+     * @summary get Sample list
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof SampleApi
+     */
+    public getSamples(options?: any) {
+        return SampleApiFp(this.configuration).getSamples(options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * add or update sample
+     * @summary add or update sample
+     * @param {Array<Samples>} body 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof SampleApi
+     */
+    public setSampleAndValueData(body: Array<Samples>, options?: any) {
+        return SampleApiFp(this.configuration).setSampleAndValueData(body, options)(this.fetch, this.basePath);
     }
 
 }

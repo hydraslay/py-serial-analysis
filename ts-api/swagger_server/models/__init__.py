@@ -5,5 +5,10 @@ from __future__ import absolute_import
 # import models into model package
 from swagger_server.models.market_break_point import MarketBreakPoint
 from swagger_server.models.market_break_point_response import MarketBreakPointResponse
+from swagger_server.models.model import Model
 from swagger_server.models.raw_data import RawData
 from swagger_server.models.raw_data_response import RawDataResponse
+from swagger_server.models.sample_types import SampleTypes
+from swagger_server.models.samples import Samples
+from swagger_server.models.samples_request import SamplesRequest
+from swagger_server.models.samples_response import SamplesResponse

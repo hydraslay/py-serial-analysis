@@ -103,17 +103,17 @@ paths:
       tags:
         - Sample
       operationId: set sample and value data
-      summary: add or update Model
-      description: add or update Model
+      summary: add or update sample
+      description: add or update sample
       parameters:
         - in: body
           name: body
           required: true
           schema:
-            $ref: '#/definitions/ModelSampleValue'
+            $ref: '#/definitions/SamplesRequest'
       responses:
         '200':
-          description: add or update Model success
+          description: add or update sample success
 
 definitions:
 
@@ -187,24 +187,23 @@ definitions:
       query_string:
         type: string
 
+  SamplesRequest:
+    type: array
+    items:
+      $ref: '#/definitions/Samples'
+
   Samples:
     type: object
     properties:
-      sample_data:
-        type: array
-        items:
-          $ref: '#/definitions/RawData'
-      value:
+      id:
         type: number
-
-  ModelSampleValue:
-    type: object
-    properties:
+      from:
+        type: number
+      to:
+        type: number
       sample_data:
         type: array
         items:
           $ref: '#/definitions/RawData'
-      model:
-        type: string
       value:
         type: number

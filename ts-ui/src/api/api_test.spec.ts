@@ -15,6 +15,24 @@ import { Configuration } from "./configuration"
 
 const config: Configuration = {}
 
+describe("ModelApi", () => {
+  let instance: api.ModelApi
+  beforeEach(function() {
+    instance = new api.ModelApi(config)
+  });
+
+  test("getModels", () => {
+    return expect(instance.getModels({})).resolves.toBe(null)
+  })
+  test("getSampleTypes", () => {
+    return expect(instance.getSampleTypes({})).resolves.toBe(null)
+  })
+  test("setModel", () => {
+    const body: api.Model = undefined
+    return expect(instance.setModel(body, {})).resolves.toBe(null)
+  })
+})
+
 describe("RawDataApi", () => {
   let instance: api.RawDataApi
   beforeEach(function() {
@@ -29,6 +47,21 @@ describe("RawDataApi", () => {
     const start: number = 1.2
     const end: number = 1.2
     return expect(instance.getRawData(interval, start, end, {})).resolves.toBe(null)
+  })
+})
+
+describe("SampleApi", () => {
+  let instance: api.SampleApi
+  beforeEach(function() {
+    instance = new api.SampleApi(config)
+  });
+
+  test("getSamples", () => {
+    return expect(instance.getSamples({})).resolves.toBe(null)
+  })
+  test("setSampleAndValueData", () => {
+    const body: Array<api.Samples> = undefined
+    return expect(instance.setSampleAndValueData(body, {})).resolves.toBe(null)
   })
 })
 

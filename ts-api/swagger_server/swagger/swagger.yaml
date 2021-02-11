@@ -58,6 +58,87 @@ paths:
               schema:
                 $ref: '#/components/schemas/MarketBreakPointResponse'
       x-openapi-router-controller: swagger_server.controllers.raw_data_controller
+  /models:
+    get:
+      tags:
+      - Model
+      summary: get Model list
+      description: get Model list
+      operationId: get_models
+      responses:
+        "200":
+          description: get Model list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Model'
+      x-openapi-router-controller: swagger_server.controllers.model_controller
+    post:
+      tags:
+      - Model
+      summary: add or update Model
+      description: add or update Model
+      operationId: set_model
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/Model'
+        required: true
+      responses:
+        "200":
+          description: add or update Model success
+          content: {}
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: swagger_server.controllers.model_controller
+  /sample_types:
+    get:
+      tags:
+      - Model
+      summary: get sample type list
+      description: get sample type list
+      operationId: get_sample_types
+      responses:
+        "200":
+          description: get sample type list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SampleTypes'
+      x-openapi-router-controller: swagger_server.controllers.model_controller
+  /samples:
+    get:
+      tags:
+      - Sample
+      summary: get Sample list
+      description: get Sample list
+      operationId: get_samples
+      responses:
+        "200":
+          description: get Sample list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SamplesResponse'
+      x-openapi-router-controller: swagger_server.controllers.sample_controller
+    post:
+      tags:
+      - Sample
+      summary: add or update sample
+      description: add or update sample
+      operationId: set_sample_and_value_data
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/SamplesRequest'
+        required: true
+      responses:
+        "200":
+          description: add or update sample success
+          content: {}
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: swagger_server.controllers.sample_controller
 components:
   schemas:
     RawDataResponse:
@@ -127,5 +208,111 @@ components:
           type: string
       example:
         timestamp: timestamp
+    Model:
+      type: object
+      properties:
+        model:
+          type: string
+        description:
+          type: string
+        params:
+          type: string
+      example:
+        description: description
+        model: model
+        params: params
+    SampleTypes:
+      type: object
+      properties:
+        type:
+          type: string
+        description:
+          type: string
+      example:
+        description: description
+        type: type
+    SamplesResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Samples'
+        query_string:
+          type: string
+      example:
+        data:
+        - sample_data:
+          - volume: 2.3021358869347655
+            high: 1.4658129805029452
+            low: 5.962133916683182
+            close: 5.637376656633329
+            open: 6.027456183070403
+            timestamp: 0
+          - volume: 2.3021358869347655
+            high: 1.4658129805029452
+            low: 5.962133916683182
+            close: 5.637376656633329
+            open: 6.027456183070403
+            timestamp: 0
+          from: 6.027456183070403
+          id: 0.8008281904610115
+          to: 1.4658129805029452
+          value: 5.962133916683182
+        - sample_data:
+          - volume: 2.3021358869347655
+            high: 1.4658129805029452
+            low: 5.962133916683182
+            close: 5.637376656633329
+            open: 6.027456183070403
+            timestamp: 0
+          - volume: 2.3021358869347655
+            high: 1.4658129805029452
+            low: 5.962133916683182
+            close: 5.637376656633329
+            open: 6.027456183070403
+            timestamp: 0
+          from: 6.027456183070403
+          id: 0.8008281904610115
+          to: 1.4658129805029452
+          value: 5.962133916683182
+        query_string: query_string
+    SamplesRequest:
+      type: array
+      items:
+        $ref: '#/components/schemas/Samples'
+    Samples:
+      type: object
+      properties:
+        id:
+          type: number
+        from:
+          type: number
+        to:
+          type: number
+        sample_data:
+          type: array
+          items:
+            $ref: '#/components/schemas/RawData'
+        value:
+          type: number
+      example:
+        sample_data:
+        - volume: 2.3021358869347655
+          high: 1.4658129805029452
+          low: 5.962133916683182
+          close: 5.637376656633329
+          open: 6.027456183070403
+          timestamp: 0
+        - volume: 2.3021358869347655
+          high: 1.4658129805029452
+          low: 5.962133916683182
+          close: 5.637376656633329
+          open: 6.027456183070403
+          timestamp: 0
+        from: 6.027456183070403
+        id: 0.8008281904610115
+        to: 1.4658129805029452
+        value: 5.962133916683182
 x-original-swagger-version: "2.0"
 
