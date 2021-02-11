@@ -45,6 +45,76 @@ paths:
           schema:
             $ref: '#/definitions/MarketBreakPointResponse'
 
+  /models:
+    get:
+      tags:
+        - Model
+      operationId: getModels
+      summary: get Model list
+      description: get Model list
+      responses:
+        '200':
+          description: get Model list
+          schema:
+            $ref: '#/definitions/Model'
+    post:
+      tags:
+        - Model
+      operationId: setModel
+      summary: add or update Model
+      description: add or update Model
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/Model'
+      responses:
+        '200':
+          description: add or update Model success
+
+  /sample_types:
+    get:
+      tags:
+        - Model
+      operationId: getSampleTypes
+      summary: get sample type list
+      description: get sample type list
+      responses:
+        '200':
+          description: get sample type list
+          schema:
+            $ref: '#/definitions/SampleTypes'
+
+  /samples:
+    get:
+      tags:
+        - Sample
+      operationId: getSamples
+      summary: get Sample list
+      description: get Sample list
+      responses:
+        '200':
+          description: get Sample list
+          schema:
+            $ref: '#/definitions/SamplesResponse'
+
+    post:
+      tags:
+        - Sample
+      operationId: set sample and value data
+      summary: add or update Model
+      description: add or update Model
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/ModelSampleValue'
+      responses:
+        '200':
+          description: add or update Model success
+
 definitions:
 
   RawDataResponse:
@@ -88,3 +158,53 @@ definitions:
     properties:
       timestamp:
         type: string
+
+  Model:
+    type: object
+    properties:
+      model:
+        type: string
+      description:
+        type: string
+      params:
+        type: string
+
+  SampleTypes:
+    type: object
+    properties:
+      type:
+        type: string
+      description:
+        type: string
+
+  SamplesResponse:
+    type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/Samples'
+      query_string:
+        type: string
+
+  Samples:
+    type: object
+    properties:
+      sample_data:
+        type: array
+        items:
+          $ref: '#/definitions/RawData'
+      value:
+        type: number
+
+  ModelSampleValue:
+    type: object
+    properties:
+      sample_data:
+        type: array
+        items:
+          $ref: '#/definitions/RawData'
+      model:
+        type: string
+      value:
+        type: number
