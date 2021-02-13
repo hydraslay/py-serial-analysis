@@ -222,22 +222,10 @@ export interface SampleTypes {
 export interface Samples {
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof Samples
      */
-    id?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof Samples
-     */
-    from?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof Samples
-     */
-    to?: number;
+    uid?: string;
     /**
      * 
      * @type {Array<RawData>}

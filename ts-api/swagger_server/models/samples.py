@@ -15,38 +15,28 @@ class Samples(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, id: float=None, _from: float=None, to: float=None, sample_data: List[RawData]=None, value: float=None):  # noqa: E501
+    def __init__(self, uid: str=None, sample_data: List[RawData]=None, value: float=None):  # noqa: E501
         """Samples - a model defined in Swagger
 
-        :param id: The id of this Samples.  # noqa: E501
-        :type id: float
-        :param _from: The _from of this Samples.  # noqa: E501
-        :type _from: float
-        :param to: The to of this Samples.  # noqa: E501
-        :type to: float
+        :param uid: The uid of this Samples.  # noqa: E501
+        :type uid: str
         :param sample_data: The sample_data of this Samples.  # noqa: E501
         :type sample_data: List[RawData]
         :param value: The value of this Samples.  # noqa: E501
         :type value: float
         """
         self.swagger_types = {
-            'id': float,
-            '_from': float,
-            'to': float,
+            'uid': str,
             'sample_data': List[RawData],
             'value': float
         }
 
         self.attribute_map = {
-            'id': 'id',
-            '_from': 'from',
-            'to': 'to',
+            'uid': 'uid',
             'sample_data': 'sample_data',
             'value': 'value'
         }
-        self._id = id
-        self.__from = _from
-        self._to = to
+        self._uid = uid
         self._sample_data = sample_data
         self._value = value
 
@@ -62,67 +52,25 @@ class Samples(Model):
         return util.deserialize_model(dikt, cls)
 
     @property
-    def id(self) -> float:
-        """Gets the id of this Samples.
+    def uid(self) -> str:
+        """Gets the uid of this Samples.
 
 
-        :return: The id of this Samples.
-        :rtype: float
+        :return: The uid of this Samples.
+        :rtype: str
         """
-        return self._id
+        return self._uid
 
-    @id.setter
-    def id(self, id: float):
-        """Sets the id of this Samples.
-
-
-        :param id: The id of this Samples.
-        :type id: float
-        """
-
-        self._id = id
-
-    @property
-    def _from(self) -> float:
-        """Gets the _from of this Samples.
+    @uid.setter
+    def uid(self, uid: str):
+        """Sets the uid of this Samples.
 
 
-        :return: The _from of this Samples.
-        :rtype: float
-        """
-        return self.__from
-
-    @_from.setter
-    def _from(self, _from: float):
-        """Sets the _from of this Samples.
-
-
-        :param _from: The _from of this Samples.
-        :type _from: float
+        :param uid: The uid of this Samples.
+        :type uid: str
         """
 
-        self.__from = _from
-
-    @property
-    def to(self) -> float:
-        """Gets the to of this Samples.
-
-
-        :return: The to of this Samples.
-        :rtype: float
-        """
-        return self._to
-
-    @to.setter
-    def to(self, to: float):
-        """Sets the to of this Samples.
-
-
-        :param to: The to of this Samples.
-        :type to: float
-        """
-
-        self._to = to
+        self._uid = uid
 
     @property
     def sample_data(self) -> List[RawData]:

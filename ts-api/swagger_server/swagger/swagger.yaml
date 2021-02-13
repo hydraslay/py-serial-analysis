@@ -242,7 +242,8 @@ components:
           type: string
       example:
         data:
-        - sample_data:
+        - uid: uid
+          sample_data:
           - volume: 2.3021358869347655
             high: 1.4658129805029452
             low: 5.962133916683182
@@ -255,11 +256,9 @@ components:
             close: 5.637376656633329
             open: 6.027456183070403
             timestamp: 0
-          from: 6.027456183070403
-          id: 0.8008281904610115
-          to: 1.4658129805029452
-          value: 5.962133916683182
-        - sample_data:
+          value: 0.8008281904610115
+        - uid: uid
+          sample_data:
           - volume: 2.3021358869347655
             high: 1.4658129805029452
             low: 5.962133916683182
@@ -272,10 +271,7 @@ components:
             close: 5.637376656633329
             open: 6.027456183070403
             timestamp: 0
-          from: 6.027456183070403
-          id: 0.8008281904610115
-          to: 1.4658129805029452
-          value: 5.962133916683182
+          value: 0.8008281904610115
         query_string: query_string
     SamplesRequest:
       type: array
@@ -284,12 +280,8 @@ components:
     Samples:
       type: object
       properties:
-        id:
-          type: number
-        from:
-          type: number
-        to:
-          type: number
+        uid:
+          type: string
         sample_data:
           type: array
           items:
@@ -297,6 +289,7 @@ components:
         value:
           type: number
       example:
+        uid: uid
         sample_data:
         - volume: 2.3021358869347655
           high: 1.4658129805029452
@@ -310,9 +303,6 @@ components:
           close: 5.637376656633329
           open: 6.027456183070403
           timestamp: 0
-        from: 6.027456183070403
-        id: 0.8008281904610115
-        to: 1.4658129805029452
-        value: 5.962133916683182
+        value: 0.8008281904610115
 x-original-swagger-version: "2.0"
 
