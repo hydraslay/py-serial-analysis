@@ -1,13 +1,16 @@
 import React, {useEffect, useState} from 'react';
 import {Form} from 'react-bootstrap'
 import './App.css';
-import {RawDataApi} from './api'
+import {RawDataApi, SampleApi} from './api'
 import {TrainDataGen} from "./components/train-data-gen";
 import {BreakPointList} from "./components/break-point-list";
 
-const rawDataApi = new RawDataApi({
+const configuration = {
     basePath: 'http://localhost:8080'
-});
+}
+
+const rawDataApi = new RawDataApi(configuration);
+const sampleApi = new SampleApi(configuration);
 
 export const App: React.FC = () => {
     const [state, setState] = useState({
@@ -33,7 +36,11 @@ export const App: React.FC = () => {
                         })
                     })
             }} />
-            <TrainDataGen hiFreq={state.hiFreq} loFreq={state.loFreq}/>
+            <TrainDataGen hiFreq={state.hiFreq}
+                          loFreq={state.loFreq}
+                          onSaveSamples={(data) => {
+                              sampleApi.setSamples(data)
+                          }}/>
         </div>
     );
 }

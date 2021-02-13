@@ -59,9 +59,9 @@ describe("SampleApi", () => {
   test("getSamples", () => {
     return expect(instance.getSamples({})).resolves.toBe(null)
   })
-  test("setSampleAndValueData", () => {
+  test("setSamples", () => {
     const body: Array<api.Samples> = undefined
-    return expect(instance.setSampleAndValueData(body, {})).resolves.toBe(null)
+    return expect(instance.setSamples(body, {})).resolves.toBe(null)
   })
 })
 

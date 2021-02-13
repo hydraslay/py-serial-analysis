@@ -1,7 +1,6 @@
 import connexion
 import psycopg2
-
-from swagger_server.models.samples import Samples  # noqa: E501
+import json
 
 
 def connect():
@@ -45,7 +44,7 @@ def get_samples():  # noqa: E501
     }
 
 
-def set_sample_and_value_data(body):  # noqa: E501
+def set_samples(body):  # noqa: E501
     """add or update sample
 
     add or update sample # noqa: E501
@@ -55,22 +54,23 @@ def set_sample_and_value_data(body):  # noqa: E501
 
     :rtype: None
     """
-    if connexion.request.is_json:
-        body = [Samples.from_dict(d) for d in connexion.request.get_json()]  # noqa: E501
+    # if connexion.request.is_json:
+    #     body = [Samples.from_dict(d) for d in connexion.request.get_json()]  # noqa: E501
+
+    body = json.loads(body)
 
     conn = connect()
-
     for row in body:
         sql = """INSERT INTO samples ("uid", "sample_data", "value") 
-            VALUES ({uid}, {sample_data}, {value}) 
+            VALUES (%s, %s, %s) 
             ON CONFLICT ("uid") DO UPDATE SET 
-            sample_data={sample_data}, value={value}""" \
-            .format_map({
-            'uid': row['uid'],
-            'sample_data': row['sample_data'],
-            'value': row['value']
-        })
-
-        conn.execute(sql)
+            sample_data=%s, value=%s"""
+        with conn.cursor() as cur:
+            cur.execute(sql, (row['uid'],
+                              json.dumps(row['sampleData']),
+                              row['value'],
+                              json.dumps(row['sampleData']),
+                              row['value']))
+        conn.commit()
 
     return 'done'

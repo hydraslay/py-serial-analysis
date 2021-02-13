@@ -2,12 +2,14 @@ import React from 'react';
 
 import {Nav, Row, Tab} from "react-bootstrap";
 import {SeriesChart} from "./line-chart";
-import {RawDataItem, SampleDataItem} from "../interface";
+import {RawDataItem, SampleDataItem, toSampleArray} from "../interface";
 import {generateSamples} from "../algorithm/sample-gen";
+import {Samples} from "../api";
 
 type TrainDataGenProps = {
     hiFreq: RawDataItem[];
     loFreq: RawDataItem[];
+    onSaveSamples: (data: Array<Samples>) => void;
 }
 
 export const TrainDataGen: React.FC<TrainDataGenProps> = (props) => {
@@ -18,6 +20,11 @@ export const TrainDataGen: React.FC<TrainDataGenProps> = (props) => {
         return grp;
     }, {})
     return (<div>
+        <div>
+            <button onClick={() => {
+                props.onSaveSamples(toSampleArray(all))
+            }}>Save Samples</button>
+        </div>
         <Tab.Container
             defaultActiveKey={"g-" + (grouped && Object.keys(grouped).length > 0 ? Object.keys(grouped)[0] : '')}
             id="tab-sample-charts"

@@ -126,7 +126,7 @@ paths:
       - Sample
       summary: add or update sample
       description: add or update sample
-      operationId: set_sample_and_value_data
+      operationId: set_samples
       requestBody:
         content:
           '*/*':

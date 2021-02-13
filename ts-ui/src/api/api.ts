@@ -724,10 +724,10 @@ export const SampleApiFetchParamCreator = function (configuration?: Configuratio
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        setSampleAndValueData(body: Array<Samples>, options: any = {}): FetchArgs {
+        setSamples(body: Array<Samples>, options: any = {}): FetchArgs {
             // verify required parameter 'body' is not null or undefined
             if (body === null || body === undefined) {
-                throw new RequiredError('body','Required parameter body was null or undefined when calling setSampleAndValueData.');
+                throw new RequiredError('body','Required parameter body was null or undefined when calling setSamples.');
             }
             const localVarPath = `/samples`;
             const localVarUrlObj = url.parse(localVarPath, true);
@@ -783,8 +783,8 @@ export const SampleApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        setSampleAndValueData(body: Array<Samples>, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
-            const localVarFetchArgs = SampleApiFetchParamCreator(configuration).setSampleAndValueData(body, options);
+        setSamples(body: Array<Samples>, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+            const localVarFetchArgs = SampleApiFetchParamCreator(configuration).setSamples(body, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -820,8 +820,8 @@ export const SampleApiFactory = function (configuration?: Configuration, fetch?:
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        setSampleAndValueData(body: Array<Samples>, options?: any) {
-            return SampleApiFp(configuration).setSampleAndValueData(body, options)(fetch, basePath);
+        setSamples(body: Array<Samples>, options?: any) {
+            return SampleApiFp(configuration).setSamples(body, options)(fetch, basePath);
         },
     };
 };
@@ -852,8 +852,8 @@ export class SampleApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof SampleApi
      */
-    public setSampleAndValueData(body: Array<Samples>, options?: any) {
-        return SampleApiFp(this.configuration).setSampleAndValueData(body, options)(this.fetch, this.basePath);
+    public setSamples(body: Array<Samples>, options?: any) {
+        return SampleApiFp(this.configuration).setSamples(body, options)(this.fetch, this.basePath);
     }
 
 }
