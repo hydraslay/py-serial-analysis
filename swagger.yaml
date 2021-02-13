@@ -195,12 +195,8 @@ definitions:
   Samples:
     type: object
     properties:
-      id:
-        type: number
-      from:
-        type: number
-      to:
-        type: number
+      uid:
+        type: string
       sample_data:
         type: array
         items:

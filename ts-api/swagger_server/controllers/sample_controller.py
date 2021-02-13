@@ -1,11 +1,7 @@
 import connexion
 import psycopg2
 
-import six
-
 from swagger_server.models.samples import Samples  # noqa: E501
-from swagger_server.models.samples_response import SamplesResponse  # noqa: E501
-from swagger_server import util
 
 
 def connect():
@@ -64,12 +60,17 @@ def set_sample_and_value_data(body):  # noqa: E501
 
     conn = connect()
 
-    sql = """INSERT INTO samples ("uid", "sample_data", "value") 
-        VALUES ({uid}, {sample_data}, {value}) 
-        ON CONFLICT ("uid") DO UPDATE SET 
-        sample_data={sample_data}, value={value}""".format_map({
-    })
+    for row in body:
+        sql = """INSERT INTO samples ("uid", "sample_data", "value") 
+            VALUES ({uid}, {sample_data}, {value}) 
+            ON CONFLICT ("uid") DO UPDATE SET 
+            sample_data={sample_data}, value={value}""" \
+            .format_map({
+            'uid': row['uid'],
+            'sample_data': row['sample_data'],
+            'value': row['value']
+        })
 
-    conn.execute(sql)
+        conn.execute(sql)
 
     return 'done'
