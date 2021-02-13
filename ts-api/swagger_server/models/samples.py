@@ -15,7 +15,7 @@ class Samples(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, uid: str=None, sample_data: List[RawData]=None, value: float=None):  # noqa: E501
+    def __init__(self, uid: str=None, sample_data: List[RawData]=None, value: float=None, extra_data: List[RawData]=None):  # noqa: E501
         """Samples - a model defined in Swagger
 
         :param uid: The uid of this Samples.  # noqa: E501
@@ -24,21 +24,26 @@ class Samples(Model):
         :type sample_data: List[RawData]
         :param value: The value of this Samples.  # noqa: E501
         :type value: float
+        :param extra_data: The extra_data of this Samples.  # noqa: E501
+        :type extra_data: List[RawData]
         """
         self.swagger_types = {
             'uid': str,
             'sample_data': List[RawData],
-            'value': float
+            'value': float,
+            'extra_data': List[RawData]
         }
 
         self.attribute_map = {
             'uid': 'uid',
             'sample_data': 'sample_data',
-            'value': 'value'
+            'value': 'value',
+            'extra_data': 'extra_data'
         }
         self._uid = uid
         self._sample_data = sample_data
         self._value = value
+        self._extra_data = extra_data
 
     @classmethod
     def from_dict(cls, dikt) -> 'Samples':
@@ -113,3 +118,24 @@ class Samples(Model):
         """
 
         self._value = value
+
+    @property
+    def extra_data(self) -> List[RawData]:
+        """Gets the extra_data of this Samples.
+
+
+        :return: The extra_data of this Samples.
+        :rtype: List[RawData]
+        """
+        return self._extra_data
+
+    @extra_data.setter
+    def extra_data(self, extra_data: List[RawData]):
+        """Sets the extra_data of this Samples.
+
+
+        :param extra_data: The extra_data of this Samples.
+        :type extra_data: List[RawData]
+        """
+
+        self._extra_data = extra_data

@@ -256,6 +256,9 @@ components:
             close: 5.637376656633329
             open: 6.027456183070403
             timestamp: 0
+          extra_data:
+          - null
+          - null
           value: 0.8008281904610115
         - uid: uid
           sample_data:
@@ -271,6 +274,9 @@ components:
             close: 5.637376656633329
             open: 6.027456183070403
             timestamp: 0
+          extra_data:
+          - null
+          - null
           value: 0.8008281904610115
         query_string: query_string
     SamplesRequest:
@@ -288,6 +294,10 @@ components:
             $ref: '#/components/schemas/RawData'
         value:
           type: number
+        extra_data:
+          type: array
+          items:
+            $ref: '#/components/schemas/RawData'
       example:
         uid: uid
         sample_data:
@@ -303,6 +313,9 @@ components:
           close: 5.637376656633329
           open: 6.027456183070403
           timestamp: 0
+        extra_data:
+        - null
+        - null
         value: 0.8008281904610115
 x-original-swagger-version: "2.0"
 

@@ -238,6 +238,12 @@ export interface Samples {
      * @memberof Samples
      */
     value?: number;
+    /**
+     * 
+     * @type {Array<RawData>}
+     * @memberof Samples
+     */
+    extraData?: Array<RawData>;
 }
 /**
  * 

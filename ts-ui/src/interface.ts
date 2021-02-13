@@ -13,9 +13,15 @@ export const toSampleArray = (data: SampleDataItem[]) => {
         return {
             uid: `v3-5m-15m-${d.hiFreq.length}-${d.hiFreq[0].timestamp}`,
             value: d.actual,
-            sampleData: d.hiFreq
+            sampleData: d.hiFreq,
+            extraData: [d.nextLowFreq]
         }
     })
+    return arr;
+}
+
+export const toRawDataItemArray = (data: Samples) => {
+    const arr: RawDataItem[] = data.sampleData!.concat(data.extraData!) as Array<Required<RawData>>
     return arr;
 }
 
