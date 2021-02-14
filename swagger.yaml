@@ -115,6 +115,35 @@ paths:
         '200':
           description: add or update sample success
 
+  /dataset:
+    get:
+      tags:
+        - Sample
+      operationId: getDataSets
+      summary: get data set
+      description: get data set
+      responses:
+        '200':
+          description: get data set
+          schema:
+            $ref: '#/definitions/DataSetResponse'
+
+    post:
+      tags:
+        - Sample
+      operationId: setDataSets
+      summary: add or update data set
+      description: add or update data set
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/DataSetRequest'
+      responses:
+        '200':
+          description: add or update data set success
+
 definitions:
 
   RawDataResponse:
@@ -207,3 +236,30 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/RawData'
+
+  DataSetResponse:
+    type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/DataSet'
+      query_string:
+        type: string
+
+  DataSetRequest:
+    type: array
+    items:
+      $ref: '#/definitions/DataSet'
+
+  DataSet:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      uid_from:
+        type: string
+      uid_to:
+        type: string

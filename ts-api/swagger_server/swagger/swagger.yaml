@@ -139,6 +139,39 @@ paths:
           content: {}
       x-codegen-request-body-name: body
       x-openapi-router-controller: swagger_server.controllers.sample_controller
+  /dataset:
+    get:
+      tags:
+      - Sample
+      summary: get data set
+      description: get data set
+      operationId: get_data_sets
+      responses:
+        "200":
+          description: get data set
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataSetResponse'
+      x-openapi-router-controller: swagger_server.controllers.sample_controller
+    post:
+      tags:
+      - Sample
+      summary: add or update data set
+      description: add or update data set
+      operationId: set_data_sets
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/DataSetRequest'
+        required: true
+      responses:
+        "200":
+          description: add or update data set success
+          content: {}
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: swagger_server.controllers.sample_controller
 components:
   schemas:
     RawDataResponse:
@@ -284,6 +317,92 @@ components:
       items:
         $ref: '#/components/schemas/Samples'
     Samples:
+      type: object
+      properties:
+        uid:
+          type: string
+        sample_data:
+          type: array
+          items:
+            $ref: '#/components/schemas/RawData'
+        value:
+          type: number
+        extra_data:
+          type: array
+          items:
+            $ref: '#/components/schemas/RawData'
+      example:
+        uid: uid
+        sample_data:
+        - volume: 2.3021358869347655
+          high: 1.4658129805029452
+          low: 5.962133916683182
+          close: 5.637376656633329
+          open: 6.027456183070403
+          timestamp: 0
+        - volume: 2.3021358869347655
+          high: 1.4658129805029452
+          low: 5.962133916683182
+          close: 5.637376656633329
+          open: 6.027456183070403
+          timestamp: 0
+        extra_data:
+        - null
+        - null
+        value: 0.8008281904610115
+    DataSetResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/DataSet'
+        query_string:
+          type: string
+      example:
+        data:
+        - uid: uid
+          sample_data:
+          - volume: 2.3021358869347655
+            high: 1.4658129805029452
+            low: 5.962133916683182
+            close: 5.637376656633329
+            open: 6.027456183070403
+            timestamp: 0
+          - volume: 2.3021358869347655
+            high: 1.4658129805029452
+            low: 5.962133916683182
+            close: 5.637376656633329
+            open: 6.027456183070403
+            timestamp: 0
+          extra_data:
+          - null
+          - null
+          value: 0.8008281904610115
+        - uid: uid
+          sample_data:
+          - volume: 2.3021358869347655
+            high: 1.4658129805029452
+            low: 5.962133916683182
+            close: 5.637376656633329
+            open: 6.027456183070403
+            timestamp: 0
+          - volume: 2.3021358869347655
+            high: 1.4658129805029452
+            low: 5.962133916683182
+            close: 5.637376656633329
+            open: 6.027456183070403
+            timestamp: 0
+          extra_data:
+          - null
+          - null
+          value: 0.8008281904610115
+        query_string: query_string
+    DataSetRequest:
+      type: array
+      items:
+        $ref: '#/components/schemas/DataSet'
+    DataSet:
       type: object
       properties:
         uid:

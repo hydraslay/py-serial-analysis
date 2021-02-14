@@ -31,7 +31,7 @@ def get_samples():  # noqa: E501
     conn = connect()
     sql = """
             SELECT uid, sample_data, value
-            FROM public.samples
+            FROM samples
         """
     rows = select_execute(conn, sql)
     return {
@@ -72,5 +72,64 @@ def set_samples(body):  # noqa: E501
                               json.dumps(row['sampleData']),
                               row['value']))
         conn.commit()
+
+    return 'done'
+
+
+def get_data_sets():  # noqa: E501
+    """get data set
+
+    get data set # noqa: E501
+
+
+    :rtype: DataSetResponse
+    """
+    conn = connect()
+    sql = """
+            SELECT id, name, uid_from, uid_to
+            FROM data_set
+        """
+    rows = select_execute(conn, sql)
+    return {
+        'data': [{
+            "id": row[0],
+            "name": row[1],
+            "uid_from": row[2],
+            "uid_to": row[3]
+        } for row in rows],
+        'query_string': sql
+    }
+
+
+def set_data_sets(body):  # noqa: E501
+    """add or update data set
+
+    add or update data set # noqa: E501
+
+    :param body:
+    :type body: list | bytes
+
+    :rtype: None
+    """
+    body = json.loads(body)
+
+    conn = connect()
+    if body['id']:
+        sql = """UPDATE data_set
+            SET name=%s, uid_from=%s, uid_to=%s
+            WHERE id=%s """
+        with conn.cursor() as cur:
+            cur.execute(sql, (body['name'],
+                              body['uid_from'],
+                              body['uid_to'],
+                              body['id']))
+    else:
+        sql = """INSERT INTO data_set ("name", "uid_from", "uid_to") 
+            VALUES (%s, %s, %s) """
+        with conn.cursor() as cur:
+            cur.execute(sql, (body['name'],
+                              body['uid_from'],
+                              body['uid_to']))
+    conn.commit()
 
     return 'done'

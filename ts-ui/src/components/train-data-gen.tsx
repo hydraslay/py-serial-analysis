@@ -32,63 +32,71 @@ export const TrainDataGen: React.FC<TrainDataGenProps> = (props) => {
     } as TrainDataGenState)
 
     return (<Form>
-        <Form.Row>
-            <Form.Group as={Col}>
-                <BreakPointList data={props.breakPoints.map((bp) => bp.timestamp!)}
-                                selectedLabel={state.selectedBP ? state.selectedBP.label : ''}
-                                onChange={(bp) => {
-                                    setState({
-                                        ...state,
-                                        selectedBP: bp,
-                                        samples: [],
-                                        progress: -1
-                                    })
-                                }}/>
-            </Form.Group>
-            <Form.Group as={Col}>
-                <Button variant='primary'
-                        style={{marginRight: '10px'}}
-                        disabled={!state.selectedBP}
-                        onClick={() => {
-                            if (!state.selectedBP) {
-                                return;
-                            }
-                            setState({
-                                ...state,
-                                progress: 0
-                            })
-                            Promise.all([
-                                rawDataApi.getRawData('5', state.selectedBP.start / 1000, state.selectedBP.end / 1000),
-                                rawDataApi.getRawData('15', state.selectedBP.start / 1000, state.selectedBP.end / 1000)
-                            ]).then((result) => {
+        <Form.Group as={Col} sm={12}>
+            <BreakPointList placeHolder='select time span'
+                            data={props.breakPoints.map((bp) => bp.timestamp!)}
+                            selectedLabel={state.selectedBP ? state.selectedBP.label : ''}
+                            onChange={(bp) => {
                                 setState({
                                     ...state,
-                                    progress: 50
+                                    selectedBP: bp,
+                                    samples: [],
+                                    progress: -1
                                 })
-                                setTimeout(() => {
-                                    const all = generateSamples(result[0].data as RawDataItem[], result[1].data as RawDataItem[]);
-                                    setState({
-                                        ...state,
-                                        samples: all,
-                                        progress: 100
-                                    })
-                                }, 100)
+                            }}/>
+        </Form.Group>
+        <Form.Group as={Col} sm={12} style={{textAlign: 'left'}}>
+            <Button variant='primary'
+                    style={{marginRight: '10px'}}
+                    disabled={!state.selectedBP}
+                    onClick={() => {
+                        if (!state.selectedBP) {
+                            return;
+                        }
+                        setState({
+                            ...state,
+                            progress: 0
+                        })
+                        Promise.all([
+                            rawDataApi.getRawData('5', state.selectedBP.start / 1000, state.selectedBP.end / 1000),
+                            rawDataApi.getRawData('15', state.selectedBP.start / 1000, state.selectedBP.end / 1000)
+                        ]).then((result) => {
+                            setState({
+                                ...state,
+                                progress: 50
                             })
-                        }}>Generate Samples</Button>
-                <Button variant='primary'
-                        disabled={!state.samples.length}
-                        onClick={() => {
-                            sampleApi.setSamples(toSampleArray(state.samples))
-                        }}>Save Samples</Button>
-            </Form.Group>
-        </Form.Row>
-        <Form.Row>
-            <Form.Group as={Col}>
-                {state.progress >= 0
-                    ? <ProgressBar max={100} now={state.progress} style={{height: '5px'}}/>
-                    : null}
-            </Form.Group>
-        </Form.Row>
-        <SampleList data={toSampleArray(state.samples)}/>
+                            setTimeout(() => {
+                                const all = generateSamples(result[0].data as RawDataItem[], result[1].data as RawDataItem[]);
+                                setState({
+                                    ...state,
+                                    samples: all,
+                                    progress: 100
+                                })
+                            }, 100)
+                        })
+                    }}>Generate Samples</Button>
+            <Button variant='primary'
+                    disabled={!state.samples.length}
+                    onClick={() => {
+                        setState({
+                            ...state,
+                            progress: 10
+                        })
+                        sampleApi.setSamples(toSampleArray(state.samples)).then(() => {
+                            setState({
+                                ...state,
+                                progress: 100
+                            })
+                        })
+                    }}>Save Samples</Button>
+        </Form.Group>
+        <Form.Group as={Col} sm={12}>
+            {state.progress >= 0
+                ? <ProgressBar max={100} now={state.progress} style={{height: '5px'}}/>
+                : null}
+        </Form.Group>
+        <Form.Group as={Col} sm={12}>
+            <SampleList data={toSampleArray(state.samples)}/>
+        </Form.Group>
     </Form>)
 }

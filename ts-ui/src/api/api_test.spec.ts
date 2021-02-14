@@ -56,8 +56,15 @@ describe("SampleApi", () => {
     instance = new api.SampleApi(config)
   });
 
+  test("getDataSets", () => {
+    return expect(instance.getDataSets({})).resolves.toBe(null)
+  })
   test("getSamples", () => {
     return expect(instance.getSamples({})).resolves.toBe(null)
+  })
+  test("setDataSets", () => {
+    const body: Array<api.DataSet> = undefined
+    return expect(instance.setDataSets(body, {})).resolves.toBe(null)
   })
   test("setSamples", () => {
     const body: Array<api.Samples> = undefined

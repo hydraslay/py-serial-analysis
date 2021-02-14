@@ -79,6 +79,63 @@ export class RequiredError extends Error {
 /**
  * 
  * @export
+ * @interface DataSet
+ */
+export interface DataSet {
+    /**
+     * 
+     * @type {string}
+     * @memberof DataSet
+     */
+    uid?: string;
+    /**
+     * 
+     * @type {Array<RawData>}
+     * @memberof DataSet
+     */
+    sampleData?: Array<RawData>;
+    /**
+     * 
+     * @type {number}
+     * @memberof DataSet
+     */
+    value?: number;
+    /**
+     * 
+     * @type {Array<RawData>}
+     * @memberof DataSet
+     */
+    extraData?: Array<RawData>;
+}
+/**
+ * 
+ * @export
+ * @interface DataSetRequest
+ */
+export interface DataSetRequest extends Array<DataSet> {
+}
+/**
+ * 
+ * @export
+ * @interface DataSetResponse
+ */
+export interface DataSetResponse {
+    /**
+     * 
+     * @type {Array<DataSet>}
+     * @memberof DataSetResponse
+     */
+    data?: Array<DataSet>;
+    /**
+     * 
+     * @type {string}
+     * @memberof DataSetResponse
+     */
+    queryString?: string;
+}
+/**
+ * 
+ * @export
  * @interface MarketBreakPoint
  */
 export interface MarketBreakPoint {
@@ -701,6 +758,29 @@ export class RawDataApi extends BaseAPI {
 export const SampleApiFetchParamCreator = function (configuration?: Configuration) {
     return {
         /**
+         * get data set
+         * @summary get data set
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getDataSets(options: any = {}): FetchArgs {
+            const localVarPath = `/dataset`;
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete localVarUrlObj.search;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * get Sample list
          * @summary get Sample list
          * @param {*} [options] Override http request option.
@@ -717,6 +797,38 @@ export const SampleApiFetchParamCreator = function (configuration?: Configuratio
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
             localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * add or update data set
+         * @summary add or update data set
+         * @param {Array<DataSet>} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        setDataSets(body: Array<DataSet>, options: any = {}): FetchArgs {
+            // verify required parameter 'body' is not null or undefined
+            if (body === null || body === undefined) {
+                throw new RequiredError('body','Required parameter body was null or undefined when calling setDataSets.');
+            }
+            const localVarPath = `/dataset`;
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'POST' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarHeaderParameter['Content-Type'] = '*/*';
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete localVarUrlObj.search;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            const needsSerialization = (<any>"Array&lt;DataSet&gt;" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(body || {}) : (body || "");
 
             return {
                 url: url.format(localVarUrlObj),
@@ -765,6 +877,24 @@ export const SampleApiFetchParamCreator = function (configuration?: Configuratio
 export const SampleApiFp = function(configuration?: Configuration) {
     return {
         /**
+         * get data set
+         * @summary get data set
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getDataSets(options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<DataSetResponse> {
+            const localVarFetchArgs = SampleApiFetchParamCreator(configuration).getDataSets(options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+        /**
          * get Sample list
          * @summary get Sample list
          * @param {*} [options] Override http request option.
@@ -776,6 +906,25 @@ export const SampleApiFp = function(configuration?: Configuration) {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
                         return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+        /**
+         * add or update data set
+         * @summary add or update data set
+         * @param {Array<DataSet>} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        setDataSets(body: Array<DataSet>, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+            const localVarFetchArgs = SampleApiFetchParamCreator(configuration).setDataSets(body, options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response;
                     } else {
                         throw response;
                     }
@@ -811,6 +960,15 @@ export const SampleApiFp = function(configuration?: Configuration) {
 export const SampleApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
     return {
         /**
+         * get data set
+         * @summary get data set
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getDataSets(options?: any) {
+            return SampleApiFp(configuration).getDataSets(options)(fetch, basePath);
+        },
+        /**
          * get Sample list
          * @summary get Sample list
          * @param {*} [options] Override http request option.
@@ -818,6 +976,16 @@ export const SampleApiFactory = function (configuration?: Configuration, fetch?:
          */
         getSamples(options?: any) {
             return SampleApiFp(configuration).getSamples(options)(fetch, basePath);
+        },
+        /**
+         * add or update data set
+         * @summary add or update data set
+         * @param {Array<DataSet>} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        setDataSets(body: Array<DataSet>, options?: any) {
+            return SampleApiFp(configuration).setDataSets(body, options)(fetch, basePath);
         },
         /**
          * add or update sample
@@ -840,6 +1008,17 @@ export const SampleApiFactory = function (configuration?: Configuration, fetch?:
  */
 export class SampleApi extends BaseAPI {
     /**
+     * get data set
+     * @summary get data set
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof SampleApi
+     */
+    public getDataSets(options?: any) {
+        return SampleApiFp(this.configuration).getDataSets(options)(this.fetch, this.basePath);
+    }
+
+    /**
      * get Sample list
      * @summary get Sample list
      * @param {*} [options] Override http request option.
@@ -848,6 +1027,18 @@ export class SampleApi extends BaseAPI {
      */
     public getSamples(options?: any) {
         return SampleApiFp(this.configuration).getSamples(options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * add or update data set
+     * @summary add or update data set
+     * @param {Array<DataSet>} body 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof SampleApi
+     */
+    public setDataSets(body: Array<DataSet>, options?: any) {
+        return SampleApiFp(this.configuration).setDataSets(body, options)(this.fetch, this.basePath);
     }
 
     /**

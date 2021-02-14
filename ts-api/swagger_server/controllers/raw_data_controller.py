@@ -30,7 +30,7 @@ def get_raw_data(interval, start, end):  # noqa: E501
     conn = connect()
     sql = """
         SELECT "timestamp", open, high, low, close, volume
-        FROM public.market_data
+        FROM market_data
         where type = '{interval}' and timestamp>={start} and timestamp<={end}
         order by "timestamp" ASC
     """.format_map({
@@ -64,7 +64,7 @@ def get_market_break_point():
             left outer join
             (
                 SELECT type, to_char(to_timestamp("timestamp"), 'YYYY/MM/DD') as ymd
-                FROM public.market_data
+                FROM market_data
                 where type ='5'
                 group by type, ymd
             ) raw on dt.date=raw.ymd

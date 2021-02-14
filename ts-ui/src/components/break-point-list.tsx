@@ -4,6 +4,7 @@ import moment from 'moment';
 import {Dropdown, DropdownButton, InputGroup} from "react-bootstrap";
 
 type BreakPointListProp = {
+    placeHolder: string;
     data: Array<string | undefined>;
     selectedLabel: string
     onChange: (bp: BreakPoint) => void;
@@ -32,7 +33,7 @@ export const BreakPointList: React.FC<BreakPointListProp> = (props) => {
             <DropdownButton
                 as={InputGroup.Prepend}
                 variant="outline-secondary"
-                title={props.selectedLabel || 'Trade Time'}
+                title={props.selectedLabel || props.placeHolder}
                 id="input-group-dropdown-1"
             >
                 {breakPoints.map((bp, i) =>
