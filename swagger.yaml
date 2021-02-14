@@ -105,6 +105,8 @@ paths:
       operationId: setSamples
       summary: add or update sample
       description: add or update sample
+      consumes:
+        - application/json
       parameters:
         - in: body
           name: body
@@ -134,6 +136,8 @@ paths:
       operationId: setDataSet
       summary: add or update data set
       description: add or update data set
+      consumes:
+        - application/json
       parameters:
         - in: body
           name: body

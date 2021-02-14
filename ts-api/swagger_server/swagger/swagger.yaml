@@ -129,7 +129,7 @@ paths:
       operationId: set_samples
       requestBody:
         content:
-          '*/*':
+          application/json:
             schema:
               $ref: '#/components/schemas/SamplesRequest'
         required: true
@@ -162,7 +162,7 @@ paths:
       operationId: set_data_set
       requestBody:
         content:
-          '*/*':
+          application/json:
             schema:
               $ref: '#/components/schemas/DataSet'
         required: true

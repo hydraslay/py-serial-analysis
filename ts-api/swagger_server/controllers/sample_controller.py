@@ -57,8 +57,6 @@ def set_samples(body):  # noqa: E501
     # if connexion.request.is_json:
     #     body = [Samples.from_dict(d) for d in connexion.request.get_json()]  # noqa: E501
 
-    body = json.loads(body)
-
     conn = connect()
     for row in body:
         sql = """INSERT INTO samples ("uid", "sample_data", "value") 
@@ -111,7 +109,6 @@ def set_data_set(body):  # noqa: E501
 
     :rtype: None
     """
-    body = json.loads(body)
 
     conn = connect()
     if body['id']:
@@ -120,16 +117,16 @@ def set_data_set(body):  # noqa: E501
             WHERE id=%s """
         with conn.cursor() as cur:
             cur.execute(sql, (body['name'],
-                              body['uid_from'],
-                              body['uid_to'],
+                              body['uidFrom'],
+                              body['uidTo'],
                               body['id']))
     else:
         sql = """INSERT INTO data_set ("name", "uid_from", "uid_to") 
             VALUES (%s, %s, %s) """
         with conn.cursor() as cur:
             cur.execute(sql, (body['name'],
-                              body['uid_from'],
-                              body['uid_to']))
+                              body['uidFrom'],
+                              body['uidTo']))
     conn.commit()
 
     return 'done'
