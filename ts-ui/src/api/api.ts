@@ -87,25 +87,25 @@ export interface DataSet {
      * @type {string}
      * @memberof DataSet
      */
-    uid?: string;
+    id?: string;
     /**
      * 
-     * @type {Array<RawData>}
+     * @type {string}
      * @memberof DataSet
      */
-    sampleData?: Array<RawData>;
+    name?: string;
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof DataSet
      */
-    value?: number;
+    uidFrom?: string;
     /**
      * 
-     * @type {Array<RawData>}
+     * @type {string}
      * @memberof DataSet
      */
-    extraData?: Array<RawData>;
+    uidTo?: string;
 }
 /**
  * 
