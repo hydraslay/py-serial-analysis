@@ -131,7 +131,7 @@ paths:
     post:
       tags:
         - Sample
-      operationId: setDataSets
+      operationId: setDataSet
       summary: add or update data set
       description: add or update data set
       parameters:
@@ -139,7 +139,7 @@ paths:
           name: body
           required: true
           schema:
-            $ref: '#/definitions/DataSetRequest'
+            $ref: '#/definitions/DataSet'
       responses:
         '200':
           description: add or update data set success
@@ -246,11 +246,6 @@ definitions:
           $ref: '#/definitions/DataSet'
       query_string:
         type: string
-
-  DataSetRequest:
-    type: array
-    items:
-      $ref: '#/definitions/DataSet'
 
   DataSet:
     type: object

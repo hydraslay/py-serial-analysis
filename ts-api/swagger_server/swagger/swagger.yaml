@@ -159,12 +159,12 @@ paths:
       - Sample
       summary: add or update data set
       description: add or update data set
-      operationId: set_data_sets
+      operationId: set_data_set
       requestBody:
         content:
           '*/*':
             schema:
-              $ref: '#/components/schemas/DataSetRequest'
+              $ref: '#/components/schemas/DataSet'
         required: true
       responses:
         "200":
@@ -370,10 +370,6 @@ components:
           id: id
           uid_from: uid_from
         query_string: query_string
-    DataSetRequest:
-      type: array
-      items:
-        $ref: '#/components/schemas/DataSet'
     DataSet:
       type: object
       properties:

@@ -1,16 +1,18 @@
-import {MarketBreakPoint, RawDataApi, SampleApi} from "../api";
-import {BreakPoint, SampleDataItem} from "../interface";
-import React from "react";
-import {Col, Dropdown, DropdownButton, Form, InputGroup} from "react-bootstrap";
+import {DataSet, MarketBreakPoint, RawDataApi, SampleApi} from "../api";
+import React, {useState} from "react";
+import {Button, Dropdown, DropdownButton, FormControl, InputGroup} from "react-bootstrap";
 
 type DataSetEditorProps = {
     breakPoints: MarketBreakPoint[];
+    onSave: (data: DataSet) => void;
+    onCancel: () => void;
 }
 
 type DataSetEditorState = {
-    selectedBP: BreakPoint | undefined;
-    samples: SampleDataItem[];
-    progress: number;
+    id: string;
+    name: string;
+    from: string;
+    to: string;
 }
 
 const configuration = {
@@ -21,12 +23,28 @@ const sampleApi = new SampleApi(configuration);
 const rawDataApi = new RawDataApi(configuration);
 
 export const DataSetEditor: React.FC<DataSetEditorProps> = (props) => {
-    return (<Form>
-        <Form.Group as={Col} sm={12}>
+    const [state, setState] = useState({
+        id: '',
+        name: '',
+        from: '',
+        to: ''
+    } as DataSetEditorState)
+
+    return (<div>
+        <InputGroup size="sm" className="mb-3">
+            <InputGroup.Prepend>
+                <InputGroup.Text id="inputGroup-sizing-sm">Data Set Name</InputGroup.Text>
+            </InputGroup.Prepend>
+            <FormControl aria-describedby="basic-addon1"/>
+        </InputGroup>
+        <InputGroup size="sm" className="mb-3">
+            <InputGroup.Prepend>
+                <InputGroup.Text id="inputGroup-sizing-sm">Time Span From</InputGroup.Text>
+            </InputGroup.Prepend>
             <DropdownButton
                 as={InputGroup.Prepend}
                 variant="outline-secondary"
-                title={'from'}
+                title={'from timestamp'}
             >
                 {props.breakPoints.map((bp, i) =>
                     <Dropdown.Item key={bp.timestamp}
@@ -36,6 +54,43 @@ export const DataSetEditor: React.FC<DataSetEditorProps> = (props) => {
                         {bp.timestamp}
                     </Dropdown.Item>)}
             </DropdownButton>
-        </Form.Group>
-    </Form>)
+        </InputGroup>
+
+        <InputGroup size="sm" className="mb-3">
+            <InputGroup.Prepend>
+                <InputGroup.Text id="inputGroup-sizing-sm">Time Span To</InputGroup.Text>
+            </InputGroup.Prepend>
+            <DropdownButton
+                as={InputGroup.Prepend}
+                variant="outline-secondary"
+                title={'from timestamp'}
+            >
+                {props.breakPoints.map((bp, i) =>
+                    <Dropdown.Item key={bp.timestamp}
+                                   onClick={() => {
+                                   }}
+                    >
+                        {bp.timestamp}
+                    </Dropdown.Item>)}
+            </DropdownButton>
+        </InputGroup>
+
+        <InputGroup>
+            <Button style={{marginRight: '10px'}}
+                    onClick={() => {
+                        props.onSave({
+                            id: state.id,
+                            name: state.name,
+                            uidFrom: state.from,
+                            uidTo: state.to
+                        })
+                    }}
+            >Save</Button>
+            <Button variant='secondary'
+                    onClick={() => {
+                        props.onCancel()
+                    }}
+            >Cancel</Button>
+        </InputGroup>
+    </div>)
 }

@@ -43,7 +43,7 @@ export const DelayConfirm: React.FC<DelayConfirmProp> = (props) => {
     }
     const popover = (
         <Popover id="popover-basic">
-            <Popover.Title as="h3">Are You Sure</Popover.Title>
+            <Popover.Title as="h3">Are You Sure?</Popover.Title>
             <Popover.Content>
                 Are you sure to {props.description} ?
                 <br/>

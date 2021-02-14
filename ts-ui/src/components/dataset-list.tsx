@@ -1,7 +1,6 @@
 import {DataSet, MarketBreakPoint, RawDataApi, SampleApi} from "../api";
-import {BreakPoint} from "../interface";
 import React, {useEffect, useState} from "react";
-import {Button, Col, Dropdown, Form, FormCheck, ListGroup} from "react-bootstrap";
+import {Button, Col, Form, FormCheck, ListGroup} from "react-bootstrap";
 import {DataSetEditor} from "./dataset-editor";
 import {DelayConfirm} from "../util/delay-confirm";
 
@@ -29,7 +28,7 @@ export const DataSetList: React.FC<DataSetListProps> = (props) => {
         editing: false
     } as DataSetListState)
 
-    useEffect(() => {
+    const refreshDataSets = () => {
         const data = sampleApi.getDataSets().then(dataSets => {
             setState({
                 dataSets: dataSets.data!,
@@ -37,29 +36,33 @@ export const DataSetList: React.FC<DataSetListProps> = (props) => {
                 editing: false
             })
         })
+    }
+
+    useEffect(() => {
+        refreshDataSets()
     }, [])
 
     return (<Form>
         <Form.Group as={Col} sm={12}>
             <ListGroup>
-            {state.dataSets.map((ds, i) =>
-                <ListGroup.Item>
-                    <FormCheck style={{display: 'inline', marginRight: '10px'}}
-                    onChange={(a) => {
-                        const newSelectedId = [...state.selectedId]
-                        if (a.target.checked) {
-                            newSelectedId.splice(0, 0, ds.id!)
-                        } else {
-                            newSelectedId.splice(newSelectedId.indexOf(ds.id!), 1)
-                        }
-                        setState({
-                            ...state,
-                            selectedId: newSelectedId
-                        })
-                    }}/>
-                    {ds!.name}
-                </ListGroup.Item>)
-            }
+                {state.dataSets.map((ds, i) =>
+                    <ListGroup.Item>
+                        <FormCheck style={{display: 'inline', marginRight: '10px'}}
+                                   onChange={(a) => {
+                                       const newSelectedId = [...state.selectedId]
+                                       if (a.target.checked) {
+                                           newSelectedId.splice(0, 0, ds.id!)
+                                       } else {
+                                           newSelectedId.splice(newSelectedId.indexOf(ds.id!), 1)
+                                       }
+                                       setState({
+                                           ...state,
+                                           selectedId: newSelectedId
+                                       })
+                                   }}/>
+                        {ds!.name}
+                    </ListGroup.Item>)
+                }
             </ListGroup>
 
         </Form.Group>
@@ -76,14 +79,30 @@ export const DataSetList: React.FC<DataSetListProps> = (props) => {
             </Button>
             <DelayConfirm
                 disabled={state.selectedId.length === 0}
-                text='－' description='delete data set' onConfirm={() => {
-                alert('deleted')
-            }} />
+                text='－'
+                description='delete selected data set'
+                onConfirm={() => {
+                    alert('deleted')
+                }}
+            />
         </Form.Group>
-        { state.editing
+        {state.editing
             ? <Form.Group as={Col} sm={12}>
-                <DataSetEditor breakPoints={props.breakPoints} />
+                <DataSetEditor breakPoints={props.breakPoints}
+                onSave={d => {
+                    sampleApi.setDataSet(d).then(() => {
+                        refreshDataSets()
+                    })
+                }}
+                onCancel={() => {
+                    setState({
+                        ...state,
+                        editing: false
+                    })
+                }}
+                />
             </Form.Group>
-            : null}
+            : null
+        }
     </Form>)
 }

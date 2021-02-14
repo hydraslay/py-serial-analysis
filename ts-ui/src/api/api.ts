@@ -110,13 +110,6 @@ export interface DataSet {
 /**
  * 
  * @export
- * @interface DataSetRequest
- */
-export interface DataSetRequest extends Array<DataSet> {
-}
-/**
- * 
- * @export
  * @interface DataSetResponse
  */
 export interface DataSetResponse {
@@ -806,14 +799,14 @@ export const SampleApiFetchParamCreator = function (configuration?: Configuratio
         /**
          * add or update data set
          * @summary add or update data set
-         * @param {Array<DataSet>} body 
+         * @param {DataSet} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        setDataSets(body: Array<DataSet>, options: any = {}): FetchArgs {
+        setDataSet(body: DataSet, options: any = {}): FetchArgs {
             // verify required parameter 'body' is not null or undefined
             if (body === null || body === undefined) {
-                throw new RequiredError('body','Required parameter body was null or undefined when calling setDataSets.');
+                throw new RequiredError('body','Required parameter body was null or undefined when calling setDataSet.');
             }
             const localVarPath = `/dataset`;
             const localVarUrlObj = url.parse(localVarPath, true);
@@ -827,7 +820,7 @@ export const SampleApiFetchParamCreator = function (configuration?: Configuratio
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
             localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-            const needsSerialization = (<any>"Array&lt;DataSet&gt;" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            const needsSerialization = (<any>"DataSet" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
             localVarRequestOptions.body =  needsSerialization ? JSON.stringify(body || {}) : (body || "");
 
             return {
@@ -915,12 +908,12 @@ export const SampleApiFp = function(configuration?: Configuration) {
         /**
          * add or update data set
          * @summary add or update data set
-         * @param {Array<DataSet>} body 
+         * @param {DataSet} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        setDataSets(body: Array<DataSet>, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
-            const localVarFetchArgs = SampleApiFetchParamCreator(configuration).setDataSets(body, options);
+        setDataSet(body: DataSet, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+            const localVarFetchArgs = SampleApiFetchParamCreator(configuration).setDataSet(body, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -980,12 +973,12 @@ export const SampleApiFactory = function (configuration?: Configuration, fetch?:
         /**
          * add or update data set
          * @summary add or update data set
-         * @param {Array<DataSet>} body 
+         * @param {DataSet} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        setDataSets(body: Array<DataSet>, options?: any) {
-            return SampleApiFp(configuration).setDataSets(body, options)(fetch, basePath);
+        setDataSet(body: DataSet, options?: any) {
+            return SampleApiFp(configuration).setDataSet(body, options)(fetch, basePath);
         },
         /**
          * add or update sample
@@ -1032,13 +1025,13 @@ export class SampleApi extends BaseAPI {
     /**
      * add or update data set
      * @summary add or update data set
-     * @param {Array<DataSet>} body 
+     * @param {DataSet} body 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof SampleApi
      */
-    public setDataSets(body: Array<DataSet>, options?: any) {
-        return SampleApiFp(this.configuration).setDataSets(body, options)(this.fetch, this.basePath);
+    public setDataSet(body: DataSet, options?: any) {
+        return SampleApiFp(this.configuration).setDataSet(body, options)(this.fetch, this.basePath);
     }
 
     /**

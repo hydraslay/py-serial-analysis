@@ -101,7 +101,7 @@ def get_data_sets():  # noqa: E501
     }
 
 
-def set_data_sets(body):  # noqa: E501
+def set_data_set(body):  # noqa: E501
     """add or update data set
 
     add or update data set # noqa: E501
