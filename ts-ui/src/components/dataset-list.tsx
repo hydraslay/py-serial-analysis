@@ -11,7 +11,7 @@ type DataSetListProps = {
 type DataSetListState = {
     dataSets: DataSet[];
     selectedId: string[];
-    editing: boolean;
+    editing: DataSet | null;
 }
 
 const configuration = {
@@ -33,7 +33,7 @@ export const DataSetList: React.FC<DataSetListProps> = (props) => {
             setState({
                 dataSets: dataSets.data!,
                 selectedId: [],
-                editing: false
+                editing: null
             })
         })
     }
@@ -46,7 +46,7 @@ export const DataSetList: React.FC<DataSetListProps> = (props) => {
         <Form.Group as={Col} sm={12}>
             <ListGroup>
                 {state.dataSets.map((ds, i) =>
-                    <ListGroup.Item>
+                    <ListGroup.Item style={{textAlign: 'left'}}>
                         <FormCheck style={{display: 'inline', marginRight: '10px'}}
                                    onChange={(a) => {
                                        const newSelectedId = [...state.selectedId]
@@ -60,7 +60,19 @@ export const DataSetList: React.FC<DataSetListProps> = (props) => {
                                            selectedId: newSelectedId
                                        })
                                    }}/>
-                        {ds!.name}
+                        <Form.Text style={{display: 'inline', marginRight: '10px'}}>{ds!.name}</Form.Text>
+                        <Form.Text style={{display: 'inline', marginRight: '10px'}}>{ds!.uidFrom}</Form.Text>
+                        <Form.Text style={{display: 'inline', marginRight: '10px'}}>---</Form.Text>
+                        <Form.Text style={{display: 'inline', marginRight: '10px'}}>{ds!.uidTo}</Form.Text>
+                        <Button
+                            onClick={() => {
+                                setState({
+                                    ...state,
+                                    editing: ds
+                                })
+                            }}
+                            variant='outline-primary'
+                        ><i className='fa fa-edit'/></Button>
                     </ListGroup.Item>)
                 }
             </ListGroup>
@@ -71,7 +83,7 @@ export const DataSetList: React.FC<DataSetListProps> = (props) => {
                     onClick={() => {
                         setState({
                             ...state,
-                            editing: true
+                            editing: {}
                         })
                     }}
             >
@@ -89,17 +101,18 @@ export const DataSetList: React.FC<DataSetListProps> = (props) => {
         {state.editing
             ? <Form.Group as={Col} sm={12}>
                 <DataSetEditor breakPoints={props.breakPoints}
-                onSave={d => {
-                    sampleApi.setDataSet(d).then(() => {
-                        refreshDataSets()
-                    })
-                }}
-                onCancel={() => {
-                    setState({
-                        ...state,
-                        editing: false
-                    })
-                }}
+                               onSave={d => {
+                                   sampleApi.setDataSet(d).then(() => {
+                                       refreshDataSets()
+                                   })
+                               }}
+                               editing={state.editing}
+                               onCancel={() => {
+                                   setState({
+                                       ...state,
+                                       editing: null
+                                   })
+                               }}
                 />
             </Form.Group>
             : null

@@ -92,8 +92,8 @@ def get_data_sets():  # noqa: E501
         'data': [{
             "id": row[0],
             "name": row[1],
-            "uid_from": row[2],
-            "uid_to": row[3]
+            "uidFrom": row[2],
+            "uidTo": row[3]
         } for row in rows],
         'query_string': sql
     }

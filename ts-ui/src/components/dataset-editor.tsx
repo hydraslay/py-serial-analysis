@@ -1,11 +1,12 @@
 import {DataSet, MarketBreakPoint, RawDataApi, SampleApi} from "../api";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Button, Dropdown, DropdownButton, FormControl, InputGroup} from "react-bootstrap";
 
 type DataSetEditorProps = {
     breakPoints: MarketBreakPoint[];
     onSave: (data: DataSet) => void;
     onCancel: () => void;
+    editing: DataSet;
 }
 
 type DataSetEditorState = {
@@ -30,12 +31,30 @@ export const DataSetEditor: React.FC<DataSetEditorProps> = (props) => {
         to: ''
     } as DataSetEditorState)
 
+    useEffect(() => {
+        const editing = props.editing
+        setState({
+            id: editing.id!,
+            name: editing.name!,
+            from: editing.uidFrom!,
+            to: editing.uidTo!
+        })
+    }, [props.editing])
+
     return (<div>
         <InputGroup size="sm" className="mb-3">
             <InputGroup.Prepend>
                 <InputGroup.Text id="inputGroup-sizing-sm">Data Set Name</InputGroup.Text>
             </InputGroup.Prepend>
-            <FormControl aria-describedby="basic-addon1"/>
+            <FormControl
+                value={state.name}
+                onChange={(e) => {
+                    setState({
+                        ...state,
+                        name: e.target.value
+                    })
+                }}
+                aria-describedby="basic-addon1"/>
         </InputGroup>
         <InputGroup size="sm" className="mb-3">
             <InputGroup.Prepend>
@@ -44,14 +63,18 @@ export const DataSetEditor: React.FC<DataSetEditorProps> = (props) => {
             <DropdownButton
                 as={InputGroup.Prepend}
                 variant="outline-secondary"
-                title={'from timestamp'}
+                title={state.from || 'from timestamp'}
             >
-                {props.breakPoints.map((bp, i) =>
-                    <Dropdown.Item key={bp.timestamp}
+                {props.breakPoints.map((bpFrom, i) =>
+                    <Dropdown.Item key={bpFrom.timestamp}
                                    onClick={() => {
+                                       setState({
+                                           ...state,
+                                           from: bpFrom.timestamp!
+                                       })
                                    }}
                     >
-                        {bp.timestamp}
+                        {bpFrom.timestamp}
                     </Dropdown.Item>)}
             </DropdownButton>
         </InputGroup>
@@ -63,14 +86,18 @@ export const DataSetEditor: React.FC<DataSetEditorProps> = (props) => {
             <DropdownButton
                 as={InputGroup.Prepend}
                 variant="outline-secondary"
-                title={'from timestamp'}
+                title={state.to || 'from timestamp'}
             >
-                {props.breakPoints.map((bp, i) =>
-                    <Dropdown.Item key={bp.timestamp}
+                {props.breakPoints.map((bpTo, i) =>
+                    <Dropdown.Item key={bpTo.timestamp}
                                    onClick={() => {
+                                       setState({
+                                           ...state,
+                                           to: bpTo.timestamp!
+                                       })
                                    }}
                     >
-                        {bp.timestamp}
+                        {bpTo.timestamp}
                     </Dropdown.Item>)}
             </DropdownButton>
         </InputGroup>
