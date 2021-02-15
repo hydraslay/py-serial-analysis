@@ -255,7 +255,7 @@ definitions:
     type: object
     properties:
       id:
-        type: string
+        type: number
       name:
         type: string
       uid_from:

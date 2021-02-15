@@ -10,7 +10,7 @@ type DataSetListProps = {
 
 type DataSetListState = {
     dataSets: DataSet[];
-    selectedId: string[];
+    selectedId: number[];
     editing: DataSet | null;
 }
 

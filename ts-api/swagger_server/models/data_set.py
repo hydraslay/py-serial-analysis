@@ -14,11 +14,11 @@ class DataSet(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, id: str=None, name: str=None, uid_from: str=None, uid_to: str=None):  # noqa: E501
+    def __init__(self, id: float=None, name: str=None, uid_from: str=None, uid_to: str=None):  # noqa: E501
         """DataSet - a model defined in Swagger
 
         :param id: The id of this DataSet.  # noqa: E501
-        :type id: str
+        :type id: float
         :param name: The name of this DataSet.  # noqa: E501
         :type name: str
         :param uid_from: The uid_from of this DataSet.  # noqa: E501
@@ -27,7 +27,7 @@ class DataSet(Model):
         :type uid_to: str
         """
         self.swagger_types = {
-            'id': str,
+            'id': float,
             'name': str,
             'uid_from': str,
             'uid_to': str
@@ -56,22 +56,22 @@ class DataSet(Model):
         return util.deserialize_model(dikt, cls)
 
     @property
-    def id(self) -> str:
+    def id(self) -> float:
         """Gets the id of this DataSet.
 
 
         :return: The id of this DataSet.
-        :rtype: str
+        :rtype: float
         """
         return self._id
 
     @id.setter
-    def id(self, id: str):
+    def id(self, id: float):
         """Sets the id of this DataSet.
 
 
         :param id: The id of this DataSet.
-        :type id: str
+        :type id: float
         """
 
         self._id = id

@@ -10,7 +10,7 @@ type DataSetEditorProps = {
 }
 
 type DataSetEditorState = {
-    id: string;
+    id: number | undefined;
     name: string;
     from: string;
     to: string;
@@ -25,7 +25,7 @@ const rawDataApi = new RawDataApi(configuration);
 
 export const DataSetEditor: React.FC<DataSetEditorProps> = (props) => {
     const [state, setState] = useState({
-        id: '',
+        id: undefined,
         name: '',
         from: '',
         to: ''

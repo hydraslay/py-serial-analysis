@@ -84,10 +84,10 @@ export class RequiredError extends Error {
 export interface DataSet {
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof DataSet
      */
-    id?: string;
+    id?: number;
     /**
      * 
      * @type {string}
