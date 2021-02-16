@@ -78,7 +78,7 @@ export const DataSetList: React.FC<DataSetListProps> = (props) => {
             </ListGroup>
 
         </Form.Group>
-        <Form.Group as={Col} sm={12}>
+        <Form.Group as={Col} sm={12} style={{textAlign: 'left'}}>
             <Button style={{marginRight: '10px'}}
                     onClick={() => {
                         setState({
