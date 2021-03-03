@@ -14,7 +14,7 @@ class DataSet(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, id: float=None, name: str=None, uid_from: str=None, uid_to: str=None):  # noqa: E501
+    def __init__(self, id: float=None, name: str=None, uid_from: str=None, uid_to: str=None, count: float=None):  # noqa: E501
         """DataSet - a model defined in Swagger
 
         :param id: The id of this DataSet.  # noqa: E501
@@ -25,24 +25,29 @@ class DataSet(Model):
         :type uid_from: str
         :param uid_to: The uid_to of this DataSet.  # noqa: E501
         :type uid_to: str
+        :param count: The count of this DataSet.  # noqa: E501
+        :type count: float
         """
         self.swagger_types = {
             'id': float,
             'name': str,
             'uid_from': str,
-            'uid_to': str
+            'uid_to': str,
+            'count': float
         }
 
         self.attribute_map = {
             'id': 'id',
             'name': 'name',
             'uid_from': 'uid_from',
-            'uid_to': 'uid_to'
+            'uid_to': 'uid_to',
+            'count': 'count'
         }
         self._id = id
         self._name = name
         self._uid_from = uid_from
         self._uid_to = uid_to
+        self._count = count
 
     @classmethod
     def from_dict(cls, dikt) -> 'DataSet':
@@ -138,3 +143,24 @@ class DataSet(Model):
         """
 
         self._uid_to = uid_to
+
+    @property
+    def count(self) -> float:
+        """Gets the count of this DataSet.
+
+
+        :return: The count of this DataSet.
+        :rtype: float
+        """
+        return self._count
+
+    @count.setter
+    def count(self, count: float):
+        """Sets the count of this DataSet.
+
+
+        :param count: The count of this DataSet.
+        :type count: float
+        """
+
+        self._count = count

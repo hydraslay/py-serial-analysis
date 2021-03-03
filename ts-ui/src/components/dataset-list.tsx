@@ -75,6 +75,7 @@ export const DataSetList: React.FC<DataSetListProps> = (props) => {
                             <Form.Text style={{display: 'inline', marginRight: '10px', fontSize: '16px'}}>{signature}</Form.Text>
                             <Form.Text style={{display: 'inline', marginRight: '10px', fontSize: '16px'}}>{from}</Form.Text>
                             <Form.Text style={{display: 'inline', marginRight: '10px', fontSize: '16px'}}>~ {duration} days</Form.Text>
+                            <Form.Text style={{display: 'inline', marginRight: '10px', fontSize: '16px'}}>has {ds!.count} samples</Form.Text>
                             <Button
                                 onClick={() => {
                                     setState({

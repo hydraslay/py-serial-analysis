@@ -363,10 +363,12 @@ components:
         data:
         - uid_to: uid_to
           name: name
+          count: 6.027456183070403
           id: 0.8008281904610115
           uid_from: uid_from
         - uid_to: uid_to
           name: name
+          count: 6.027456183070403
           id: 0.8008281904610115
           uid_from: uid_from
         query_string: query_string
@@ -381,9 +383,12 @@ components:
           type: string
         uid_to:
           type: string
+        count:
+          type: number
       example:
         uid_to: uid_to
         name: name
+        count: 6.027456183070403
         id: 0.8008281904610115
         uid_from: uid_from
 x-original-swagger-version: "2.0"

@@ -106,6 +106,12 @@ export interface DataSet {
      * @memberof DataSet
      */
     uidTo?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof DataSet
+     */
+    count?: number;
 }
 /**
  * 

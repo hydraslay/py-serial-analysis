@@ -262,3 +262,5 @@ definitions:
         type: string
       uid_to:
         type: string
+      count:
+        type: number
