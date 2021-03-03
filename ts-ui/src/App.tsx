@@ -3,6 +3,7 @@ import './App.css';
 import {MarketBreakPoint, RawDataApi} from './api'
 import {TrainDataGen} from "./components/train-data-gen";
 import {DataSetList} from "./components/dataset-list";
+import {Tab, Tabs} from "react-bootstrap";
 
 const configuration = {
     basePath: 'http://localhost:8080'
@@ -26,8 +27,18 @@ export const App: React.FC = () => {
 
     return (
         <div className="App">
-            <TrainDataGen breakPoints={state.breakPoints}/>
-            <DataSetList breakPoints={state.breakPoints}></DataSetList>
+            <Tabs
+                id="controlled-tab-example"
+                defaultActiveKey='list'
+            >
+                <Tab eventKey="list" title="Data Set">
+                    <DataSetList breakPoints={state.breakPoints}></DataSetList>
+                </Tab>
+                <Tab eventKey="gen" title="Generator">
+                    <TrainDataGen breakPoints={state.breakPoints}/>
+                </Tab>
+            </Tabs>
         </div>
+
     );
 }

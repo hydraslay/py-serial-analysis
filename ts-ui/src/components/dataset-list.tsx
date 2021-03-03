@@ -1,3 +1,4 @@
+import moment from 'moment'
 import {DataSet, MarketBreakPoint, RawDataApi, SampleApi} from "../api";
 import React, {useEffect, useState} from "react";
 import {Button, Col, Form, FormCheck, ListGroup} from "react-bootstrap";
@@ -45,47 +46,59 @@ export const DataSetList: React.FC<DataSetListProps> = (props) => {
     return (<Form>
         <Form.Group as={Col} sm={12}>
             <ListGroup>
-                {state.dataSets.map((ds, i) =>
-                    <ListGroup.Item style={{textAlign: 'left'}}>
-                        <FormCheck style={{display: 'inline', marginRight: '10px'}}
-                                   onChange={(a) => {
-                                       const newSelectedId = [...state.selectedId]
-                                       if (a.target.checked) {
-                                           newSelectedId.splice(0, 0, ds.id!)
-                                       } else {
-                                           newSelectedId.splice(newSelectedId.indexOf(ds.id!), 1)
-                                       }
-                                       setState({
-                                           ...state,
-                                           selectedId: newSelectedId
-                                       })
-                                   }}/>
-                        <Form.Text style={{display: 'inline', marginRight: '10px'}}>{ds!.name}</Form.Text>
-                        <Form.Text style={{display: 'inline', marginRight: '10px'}}>{ds!.uidFrom}</Form.Text>
-                        <Form.Text style={{display: 'inline', marginRight: '10px'}}>---</Form.Text>
-                        <Form.Text style={{display: 'inline', marginRight: '10px'}}>{ds!.uidTo}</Form.Text>
-                        <Button
-                            onClick={() => {
-                                setState({
-                                    ...state,
-                                    editing: ds
-                                })
+                {state.dataSets.map((ds, i) => {
+                    const arr = ds!.uidFrom!.split('-');
+                    const signature = arr.slice(0, 4).join('-');
+                    const from = moment(new Date(parseInt(arr[4]))).format('YYYY-MM-DD');
+                    const duration = Math.round((parseInt(ds!.uidTo!.split('-')[4]) - parseInt(arr[4])) / 1000 / 3600 / 24);
+                    return (<ListGroup.Item
+                            style={{
+                                textAlign: 'left'
                             }}
-                            variant='outline-primary'
-                        ><i className='fa fa-edit'/></Button>
-                    </ListGroup.Item>)
+                        >
+                            <FormCheck
+                                style={{display: 'inline', marginRight: '10px'}}
+                                onChange={(a) => {
+                                    const newSelectedId = [...state.selectedId]
+                                    if (a.target.checked) {
+                                        newSelectedId.splice(0, 0, ds.id!)
+                                    } else {
+                                        newSelectedId.splice(newSelectedId.indexOf(ds.id!), 1)
+                                    }
+                                    setState({
+                                        ...state,
+                                        selectedId: newSelectedId
+                                    })
+                               }}
+                            />
+                            <Form.Text style={{display: 'inline', marginRight: '10px', fontSize: '16px'}}>{ds!.name}</Form.Text>
+                            <Form.Text style={{display: 'inline', marginRight: '10px', fontSize: '16px'}}>{signature}</Form.Text>
+                            <Form.Text style={{display: 'inline', marginRight: '10px', fontSize: '16px'}}>{from}</Form.Text>
+                            <Form.Text style={{display: 'inline', marginRight: '10px', fontSize: '16px'}}>~ {duration} days</Form.Text>
+                            <Button
+                                onClick={() => {
+                                    setState({
+                                        ...state,
+                                        editing: ds
+                                    })
+                                }}
+                                variant='outline-primary'
+                            ><i className='fa fa-edit'/></Button>
+                        </ListGroup.Item>);
+                    })
                 }
             </ListGroup>
 
         </Form.Group>
         <Form.Group as={Col} sm={12} style={{textAlign: 'left'}}>
-            <Button style={{marginRight: '10px'}}
-                    onClick={() => {
-                        setState({
-                            ...state,
-                            editing: {}
-                        })
-                    }}
+            <Button
+                style={{marginRight: '10px'}}
+                onClick={() => {
+                    setState({
+                        ...state,
+                        editing: {}
+                    })
+                }}
             >
                 ＋
             </Button>
@@ -97,6 +110,17 @@ export const DataSetList: React.FC<DataSetListProps> = (props) => {
                     alert('deleted')
                 }}
             />
+            <Button
+                style={{
+                marginLeft: '30px'
+            }}
+                disabled={state.selectedId.length !== 1}
+                onClick={() => {
+
+                }}
+            >
+                {'>> FIT <<'}
+            </Button>
         </Form.Group>
         {state.editing
             ? <Form.Group as={Col} sm={12}>

@@ -22,10 +22,7 @@ def select_execute(con, sql):
 
 def get_samples():  # noqa: E501
     """get Sample list
-
     get Sample list # noqa: E501
-
-
     :rtype: SamplesResponse
     """
     conn = connect()
@@ -46,12 +43,9 @@ def get_samples():  # noqa: E501
 
 def set_samples(body):  # noqa: E501
     """add or update sample
-
     add or update sample # noqa: E501
-
     :param body: 
     :type body: list | bytes
-
     :rtype: None
     """
     # if connexion.request.is_json:
@@ -76,16 +70,19 @@ def set_samples(body):  # noqa: E501
 
 def get_data_sets():  # noqa: E501
     """get data set
-
     get data set # noqa: E501
-
-
     :rtype: DataSetResponse
     """
     conn = connect()
-    sql = """
-            SELECT id, name, uid_from, uid_to
-            FROM data_set
+    sql = """SELECT dset.id, dset.name, dset.uid_from, dset.uid_to, gp.cnt
+            from
+            (
+                SELECT ds.id, count(sa.uid) cnt
+                FROM data_set ds 
+                inner join samples sa on sa.uid > ds.uid_from and sa.uid < ds.uid_to
+                group by ds.id 
+            ) gp 
+            inner join data_set dset on gp.id = dset.id
         """
     rows = select_execute(conn, sql)
     return {
@@ -93,7 +90,8 @@ def get_data_sets():  # noqa: E501
             "id": row[0],
             "name": row[1],
             "uidFrom": row[2],
-            "uidTo": row[3]
+            "uidTo": row[3],
+            "count": row[4]
         } for row in rows],
         'query_string': sql
     }
@@ -101,12 +99,9 @@ def get_data_sets():  # noqa: E501
 
 def set_data_set(body):  # noqa: E501
     """add or update data set
-
     add or update data set # noqa: E501
-
     :param body:
     :type body: list | bytes
-
     :rtype: None
     """
 
