@@ -254,6 +254,64 @@ export interface RawDataResponse {
 /**
  * 
  * @export
+ * @interface SampleSummaryRequest
+ */
+export interface SampleSummaryRequest extends Array<SampleSummaryRequestItem> {
+}
+/**
+ * 
+ * @export
+ * @interface SampleSummaryRequestItem
+ */
+export interface SampleSummaryRequestItem {
+    /**
+     * 
+     * @type {string}
+     * @memberof SampleSummaryRequestItem
+     */
+    from?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SampleSummaryRequestItem
+     */
+    to?: string;
+}
+/**
+ * 
+ * @export
+ * @interface SampleSummaryResponse
+ */
+export interface SampleSummaryResponse extends Array<SampleSummaryResponseItem> {
+}
+/**
+ * 
+ * @export
+ * @interface SampleSummaryResponseItem
+ */
+export interface SampleSummaryResponseItem {
+    /**
+     * 
+     * @type {string}
+     * @memberof SampleSummaryResponseItem
+     */
+    from?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SampleSummaryResponseItem
+     */
+    to?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof SampleSummaryResponseItem
+     */
+    count?: number;
+}
+/**
+ * 
+ * @export
  * @interface SampleTypes
  */
 export interface SampleTypes {
@@ -780,6 +838,38 @@ export const SampleApiFetchParamCreator = function (configuration?: Configuratio
             };
         },
         /**
+         * get Sample Summary
+         * @summary get Sample Summary
+         * @param {Array<SampleSummaryRequestItem>} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getSampleSummary(body: Array<SampleSummaryRequestItem>, options: any = {}): FetchArgs {
+            // verify required parameter 'body' is not null or undefined
+            if (body === null || body === undefined) {
+                throw new RequiredError('body','Required parameter body was null or undefined when calling getSampleSummary.');
+            }
+            const localVarPath = `/samples/summary`;
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'POST' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarHeaderParameter['Content-Type'] = '*/*';
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete localVarUrlObj.search;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            const needsSerialization = (<any>"Array&lt;SampleSummaryRequestItem&gt;" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(body || {}) : (body || "");
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * get Sample list
          * @summary get Sample list
          * @param {*} [options] Override http request option.
@@ -894,6 +984,25 @@ export const SampleApiFp = function(configuration?: Configuration) {
             };
         },
         /**
+         * get Sample Summary
+         * @summary get Sample Summary
+         * @param {Array<SampleSummaryRequestItem>} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getSampleSummary(body: Array<SampleSummaryRequestItem>, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<SampleSummaryResponse> {
+            const localVarFetchArgs = SampleApiFetchParamCreator(configuration).getSampleSummary(body, options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+        /**
          * get Sample list
          * @summary get Sample list
          * @param {*} [options] Override http request option.
@@ -968,6 +1077,16 @@ export const SampleApiFactory = function (configuration?: Configuration, fetch?:
             return SampleApiFp(configuration).getDataSets(options)(fetch, basePath);
         },
         /**
+         * get Sample Summary
+         * @summary get Sample Summary
+         * @param {Array<SampleSummaryRequestItem>} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getSampleSummary(body: Array<SampleSummaryRequestItem>, options?: any) {
+            return SampleApiFp(configuration).getSampleSummary(body, options)(fetch, basePath);
+        },
+        /**
          * get Sample list
          * @summary get Sample list
          * @param {*} [options] Override http request option.
@@ -1015,6 +1134,18 @@ export class SampleApi extends BaseAPI {
      */
     public getDataSets(options?: any) {
         return SampleApiFp(this.configuration).getDataSets(options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * get Sample Summary
+     * @summary get Sample Summary
+     * @param {Array<SampleSummaryRequestItem>} body 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof SampleApi
+     */
+    public getSampleSummary(body: Array<SampleSummaryRequestItem>, options?: any) {
+        return SampleApiFp(this.configuration).getSampleSummary(body, options)(this.fetch, this.basePath);
     }
 
     /**

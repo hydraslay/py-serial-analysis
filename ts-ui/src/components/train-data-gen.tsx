@@ -1,7 +1,7 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {Button, Col, Form, ListGroup, ProgressBar} from "react-bootstrap";
-import {BreakPoint, RawDataItem, SampleDataItem, toSampleArray} from "../interface";
+import {BreakPoint, BreakPointSummary, RawDataItem, SampleDataItem, toSampleArray} from "../interface";
 import {generateSamples} from "../algorithm/sample-gen";
 import {MarketBreakPoint, RawDataApi, SampleApi} from "../api";
 import {SampleList} from "./sample-list";
@@ -12,6 +12,8 @@ type TrainDataGenProps = {
 }
 
 type TrainDataGenState = {
+    breakPoints: BreakPoint[];
+    summary: BreakPointSummary[];
     samples: SampleDataItem[];
     progress: number;
 }
@@ -25,37 +27,13 @@ const rawDataApi = new RawDataApi(configuration);
 
 export const TrainDataGen: React.FC<TrainDataGenProps> = (props) => {
     const [state, setState] = useState({
+        breakPoints: [],
+        summary: [],
         samples: [],
         progress: -1
     } as TrainDataGenState)
 
-    const generateUpload = async (bp: BreakPoint) => {
-        setState({
-            samples: [],
-            progress: 0
-        })
-        const result = await Promise.all([
-            rawDataApi.getRawData('5', bp.start / 1000, bp.end / 1000),
-            rawDataApi.getRawData('15', bp.start / 1000, bp.end / 1000)
-        ])
-        setState({
-            samples: [],
-            progress: 30
-        })
-        const all = generateSamples(result[0].data as RawDataItem[], result[1].data as RawDataItem[]);
-        setState({
-            ...state,
-            samples: all,
-            progress: 70
-        })
-        await sampleApi.setSamples(toSampleArray(state.samples))
-        setState({
-            samples: all,
-            progress: 100
-        })
-    }
-
-    const renderList = () => {
+    useEffect(() => {
         let start: string = '';
         const breakPoints = props.breakPoints.reduce((arr: BreakPoint[], item) => {
             const curr = item.timestamp!;
@@ -71,6 +49,68 @@ export const TrainDataGen: React.FC<TrainDataGenProps> = (props) => {
             start = curr;
             return arr;
         }, [])
+        setState({
+            ...state,
+            breakPoints
+        })
+        getSampleSummary();
+    }, [props.breakPoints])
+
+    const generateUpload = async (bp: BreakPoint) => {
+        setState({
+            ...state,
+            samples: [],
+            progress: 0
+        })
+        const result = await Promise.all([
+            rawDataApi.getRawData('5', bp.start / 1000, bp.end / 1000),
+            rawDataApi.getRawData('15', bp.start / 1000, bp.end / 1000)
+        ])
+        setState({
+            ...state,
+            samples: [],
+            progress: 30
+        })
+        const all = generateSamples(result[0].data as RawDataItem[], result[1].data as RawDataItem[]);
+        setState({
+            ...state,
+            samples: all,
+            progress: 70
+        })
+        await sampleApi.setSamples(toSampleArray(state.samples))
+        setState({
+            ...state,
+            samples: all,
+            progress: 100
+        })
+    }
+
+    const getSampleSummary = async () => {
+        const param = state.breakPoints.map(b => {
+            return {
+                from: 'v3-m5-m15-10' + b.start,
+                to: 'v3-m5-m15-10' + b.end
+            }
+        })
+        const resp = await sampleApi.getSampleSummary(param);
+        setState({
+            ...state,
+            summary: resp.map(i => {
+                const arrFrom = i.from!.split('-')
+                const tsFrom = parseInt(arrFrom[arrFrom.length - 1]) * 1000
+                const arrTo = i.to!.split('-')
+                const tsTo = parseInt(arrTo[arrTo.length - 1]) * 1000
+                return {
+                    label: `${moment(tsFrom).format('YYYY-MM-DD')} ~ ${moment(tsTo).format('YYYY-MM-DD')}`,
+                    start: tsFrom,
+                    end: tsTo,
+                    count: i.count!
+                }
+            })
+        })
+    }
+
+    const renderList = () => {
 
         return <div
             style={{
@@ -81,7 +121,7 @@ export const TrainDataGen: React.FC<TrainDataGenProps> = (props) => {
             }}
         >
             <ListGroup>
-                {breakPoints.map((bp, i) => {
+                {(state.summary.length > 0 ? state.summary : state.breakPoints).map((bp: BreakPoint | BreakPointSummary, i) => {
                     return <ListGroup.Item
                         key={'dateSpan' + i}
                         style={{textAlign: 'left'}}
@@ -98,6 +138,9 @@ export const TrainDataGen: React.FC<TrainDataGenProps> = (props) => {
                                     generateUpload(bp).then(r => {})
                                 }}
                         ><i className="fas fa-microchip"></i></Button>
+                        <Form.Text style={{display: 'inline'}}>
+                            {'count' in bp ? bp.count : ''}
+                        </Form.Text>
                     </ListGroup.Item>
                 })}
             </ListGroup>

@@ -106,6 +106,28 @@ paths:
               schema:
                 $ref: '#/components/schemas/SampleTypes'
       x-openapi-router-controller: swagger_server.controllers.model_controller
+  /samples/summary:
+    post:
+      tags:
+      - Sample
+      summary: get Sample Summary
+      description: get Sample Summary
+      operationId: get_sample_summary
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/SampleSummaryRequest'
+        required: true
+      responses:
+        "200":
+          description: get Sample Summary
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SampleSummaryResponse'
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: swagger_server.controllers.sample_controller
   /samples:
     get:
       tags:
@@ -391,5 +413,33 @@ components:
         count: 6.027456183070403
         id: 0.8008281904610115
         uid_from: uid_from
+    SampleSummaryRequest:
+      type: array
+      items:
+        $ref: '#/components/schemas/SampleSummaryRequestItem'
+    SampleSummaryRequestItem:
+      type: object
+      properties:
+        from:
+          type: string
+        to:
+          type: string
+    SampleSummaryResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/SampleSummaryResponseItem'
+    SampleSummaryResponseItem:
+      type: object
+      properties:
+        from:
+          type: string
+        to:
+          type: string
+        count:
+          type: number
+      example:
+        count: 0.8008281904610115
+        from: from
+        to: to
 x-original-swagger-version: "2.0"
 

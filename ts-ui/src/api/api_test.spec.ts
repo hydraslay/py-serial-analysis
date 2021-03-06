@@ -59,6 +59,10 @@ describe("SampleApi", () => {
   test("getDataSets", () => {
     return expect(instance.getDataSets({})).resolves.toBe(null)
   })
+  test("getSampleSummary", () => {
+    const body: Array<api.SampleSummaryRequestItem> = undefined
+    return expect(instance.getSampleSummary(body, {})).resolves.toBe(null)
+  })
   test("getSamples", () => {
     return expect(instance.getSamples({})).resolves.toBe(null)
   })

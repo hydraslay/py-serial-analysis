@@ -86,6 +86,27 @@ paths:
           schema:
             $ref: '#/definitions/SampleTypes'
 
+  /samples/summary:
+    post:
+      tags:
+        - Sample
+      operationId: getSampleSummary
+      summary: get Sample Summary
+      description: get Sample Summary
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/SampleSummaryRequest'
+      responses:
+        '200':
+          description: get Sample Summary
+          schema:
+            $ref: '#/definitions/SampleSummaryResponse'
+
   /samples:
     get:
       tags:
@@ -261,6 +282,34 @@ definitions:
       uid_from:
         type: string
       uid_to:
+        type: string
+      count:
+        type: number
+
+  SampleSummaryRequest:
+    type: array
+    items:
+      $ref: '#/definitions/SampleSummaryRequestItem'
+
+  SampleSummaryRequestItem:
+    type: object
+    properties:
+      from:
+        type: string
+      to:
+        type: string
+
+  SampleSummaryResponse:
+    type: array
+    items:
+      $ref: '#/definitions/SampleSummaryResponseItem'
+
+  SampleSummaryResponseItem:
+    type: object
+    properties:
+      from:
+        type: string
+      to:
         type: string
       count:
         type: number

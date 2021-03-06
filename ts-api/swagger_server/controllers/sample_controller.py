@@ -12,9 +12,9 @@ def connect():
     return con
 
 
-def select_execute(con, sql):
+def select_execute(con, sql, params=()):
     with con.cursor() as cur:
-        cur.execute(sql)
+        cur.execute(sql, params)
         rows = cur.fetchall()
 
     return rows
@@ -125,3 +125,35 @@ def set_data_set(body):  # noqa: E501
     conn.commit()
 
     return 'done'
+
+
+def get_sample_summary(body):  # noqa: E501
+    if len(body) == 0:
+        return {
+            'data': [],
+            'query_string': 'nothing'
+        }
+
+    param = []
+    for row in body:
+        param.append([body[row]['from'], body[row]['to']])
+
+    conn = connect()
+    sql = """SELECT cond.from, cond.to, count(1) "count"
+        FROM (
+            values %s
+        ) cond("from", "to")
+        left join samples sa on cond.from <= sa.uid and cond.to >= sa.uid
+        group by cond.from, cond.to
+        """
+    rows = select_execute(conn, sql, param)
+    return {
+        'data': [{
+            "id": row[0],
+            "name": row[1],
+            "uidFrom": row[2],
+            "uidTo": row[3],
+            "count": row[4]
+        } for row in rows],
+        'query_string': sql
+    }

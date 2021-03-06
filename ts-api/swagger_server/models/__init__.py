@@ -10,6 +10,10 @@ from swagger_server.models.market_break_point_response import MarketBreakPointRe
 from swagger_server.models.model import Model
 from swagger_server.models.raw_data import RawData
 from swagger_server.models.raw_data_response import RawDataResponse
+from swagger_server.models.sample_summary_request import SampleSummaryRequest
+from swagger_server.models.sample_summary_request_item import SampleSummaryRequestItem
+from swagger_server.models.sample_summary_response import SampleSummaryResponse
+from swagger_server.models.sample_summary_response_item import SampleSummaryResponseItem
 from swagger_server.models.sample_types import SampleTypes
 from swagger_server.models.samples import Samples
 from swagger_server.models.samples_request import SamplesRequest

@@ -30,3 +30,7 @@ export type BreakPoint = {
     start: number;
     end: number;
 }
+
+export type BreakPointSummary = {
+    count: number
+} & BreakPoint
