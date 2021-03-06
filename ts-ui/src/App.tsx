@@ -30,6 +30,7 @@ export const App: React.FC = () => {
             <Tabs
                 id="controlled-tab-example"
                 defaultActiveKey='list'
+                transition={false}
             >
                 <Tab eventKey="list" title="Data Set">
                     <DataSetList breakPoints={state.breakPoints}></DataSetList>

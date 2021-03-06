@@ -52,6 +52,7 @@ export const DataSetList: React.FC<DataSetListProps> = (props) => {
                     const from = moment(new Date(parseInt(arr[4]))).format('YYYY-MM-DD');
                     const duration = Math.round((parseInt(ds!.uidTo!.split('-')[4]) - parseInt(arr[4])) / 1000 / 3600 / 24);
                     return (<ListGroup.Item
+                            key={'dataSet' + i}
                             style={{
                                 textAlign: 'left'
                             }}

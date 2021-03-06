@@ -60,7 +60,7 @@ export const TrainDataGen: React.FC<TrainDataGenProps> = (props) => {
         const breakPoints = props.breakPoints.reduce((arr: BreakPoint[], item) => {
             const curr = item.timestamp!;
             if (start) {
-                if (!moment(start, "YYYY-MM-DD").add(1, 'days').isSame(curr)) {
+                if (!moment(start, "YYYY/MM/DD").add(1, 'days').isSame(moment(curr, "YYYY/MM/DD"))) {
                     arr.push({
                         label: `${start} ~ ${item.timestamp}`,
                         start: new Date(start).valueOf(),
@@ -82,7 +82,10 @@ export const TrainDataGen: React.FC<TrainDataGenProps> = (props) => {
         >
             <ListGroup>
                 {breakPoints.map((bp, i) => {
-                    return <ListGroup.Item style={{textAlign: 'left'}}>
+                    return <ListGroup.Item
+                        key={'dateSpan' + i}
+                        style={{textAlign: 'left'}}
+                    >
                         <Form.Text style={{display: 'inline'}}>
                             {bp.label}
                         </Form.Text>
