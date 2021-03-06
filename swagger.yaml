@@ -300,9 +300,13 @@ definitions:
         type: string
 
   SampleSummaryResponse:
-    type: array
-    items:
-      $ref: '#/definitions/SampleSummaryResponseItem'
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/SampleSummaryResponseItem'
+      query_string:
+        type: string
 
   SampleSummaryResponseItem:
     type: object

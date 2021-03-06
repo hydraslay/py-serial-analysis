@@ -282,7 +282,19 @@ export interface SampleSummaryRequestItem {
  * @export
  * @interface SampleSummaryResponse
  */
-export interface SampleSummaryResponse extends Array<SampleSummaryResponseItem> {
+export interface SampleSummaryResponse {
+    /**
+     * 
+     * @type {Array<SampleSummaryResponseItem>}
+     * @memberof SampleSummaryResponse
+     */
+    data?: Array<SampleSummaryResponseItem>;
+    /**
+     * 
+     * @type {string}
+     * @memberof SampleSummaryResponse
+     */
+    queryString?: string;
 }
 /**
  * 

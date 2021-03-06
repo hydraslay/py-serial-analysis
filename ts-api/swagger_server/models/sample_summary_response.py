@@ -15,15 +15,25 @@ class SampleSummaryResponse(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self):  # noqa: E501
+    def __init__(self, data: List[SampleSummaryResponseItem]=None, query_string: str=None):  # noqa: E501
         """SampleSummaryResponse - a model defined in Swagger
 
+        :param data: The data of this SampleSummaryResponse.  # noqa: E501
+        :type data: List[SampleSummaryResponseItem]
+        :param query_string: The query_string of this SampleSummaryResponse.  # noqa: E501
+        :type query_string: str
         """
         self.swagger_types = {
+            'data': List[SampleSummaryResponseItem],
+            'query_string': str
         }
 
         self.attribute_map = {
+            'data': 'data',
+            'query_string': 'query_string'
         }
+        self._data = data
+        self._query_string = query_string
 
     @classmethod
     def from_dict(cls, dikt) -> 'SampleSummaryResponse':
@@ -35,3 +45,45 @@ class SampleSummaryResponse(Model):
         :rtype: SampleSummaryResponse
         """
         return util.deserialize_model(dikt, cls)
+
+    @property
+    def data(self) -> List[SampleSummaryResponseItem]:
+        """Gets the data of this SampleSummaryResponse.
+
+
+        :return: The data of this SampleSummaryResponse.
+        :rtype: List[SampleSummaryResponseItem]
+        """
+        return self._data
+
+    @data.setter
+    def data(self, data: List[SampleSummaryResponseItem]):
+        """Sets the data of this SampleSummaryResponse.
+
+
+        :param data: The data of this SampleSummaryResponse.
+        :type data: List[SampleSummaryResponseItem]
+        """
+
+        self._data = data
+
+    @property
+    def query_string(self) -> str:
+        """Gets the query_string of this SampleSummaryResponse.
+
+
+        :return: The query_string of this SampleSummaryResponse.
+        :rtype: str
+        """
+        return self._query_string
+
+    @query_string.setter
+    def query_string(self, query_string: str):
+        """Sets the query_string of this SampleSummaryResponse.
+
+
+        :param query_string: The query_string of this SampleSummaryResponse.
+        :type query_string: str
+        """
+
+        self._query_string = query_string

@@ -425,9 +425,23 @@ components:
         to:
           type: string
     SampleSummaryResponse:
-      type: array
-      items:
-        $ref: '#/components/schemas/SampleSummaryResponseItem'
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/SampleSummaryResponseItem'
+        query_string:
+          type: string
+      example:
+        data:
+        - count: 0.8008281904610115
+          from: from
+          to: to
+        - count: 0.8008281904610115
+          from: from
+          to: to
+        query_string: query_string
     SampleSummaryResponseItem:
       type: object
       properties:

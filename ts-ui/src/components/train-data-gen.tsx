@@ -53,7 +53,7 @@ export const TrainDataGen: React.FC<TrainDataGenProps> = (props) => {
             ...state,
             breakPoints
         })
-        getSampleSummary();
+        getSampleSummary(breakPoints);
     }, [props.breakPoints])
 
     const generateUpload = async (bp: BreakPoint) => {
@@ -85,29 +85,31 @@ export const TrainDataGen: React.FC<TrainDataGenProps> = (props) => {
         })
     }
 
-    const getSampleSummary = async () => {
-        const param = state.breakPoints.map(b => {
+    const getSampleSummary = async (breakPoints: BreakPoint[]) => {
+        const param = breakPoints.map(b => {
             return {
                 from: 'v3-m5-m15-10' + b.start,
                 to: 'v3-m5-m15-10' + b.end
             }
         })
         const resp = await sampleApi.getSampleSummary(param);
-        setState({
-            ...state,
-            summary: resp.map(i => {
-                const arrFrom = i.from!.split('-')
-                const tsFrom = parseInt(arrFrom[arrFrom.length - 1]) * 1000
-                const arrTo = i.to!.split('-')
-                const tsTo = parseInt(arrTo[arrTo.length - 1]) * 1000
-                return {
-                    label: `${moment(tsFrom).format('YYYY-MM-DD')} ~ ${moment(tsTo).format('YYYY-MM-DD')}`,
-                    start: tsFrom,
-                    end: tsTo,
-                    count: i.count!
-                }
+        if (resp.data) {
+            setState({
+                ...state,
+                summary: resp.data.map(i => {
+                    const arrFrom = i.from!.split('-')
+                    const tsFrom = parseInt(arrFrom[arrFrom.length - 1]) * 1000
+                    const arrTo = i.to!.split('-')
+                    const tsTo = parseInt(arrTo[arrTo.length - 1]) * 1000
+                    return {
+                        label: `${moment(tsFrom).format('YYYY-MM-DD')} ~ ${moment(tsTo).format('YYYY-MM-DD')}`,
+                        start: tsFrom,
+                        end: tsTo,
+                        count: i.count!
+                    }
+                })
             })
-        })
+        }
     }
 
     const renderList = () => {
