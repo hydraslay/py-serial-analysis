@@ -88,8 +88,8 @@ export const TrainDataGen: React.FC<TrainDataGenProps> = (props) => {
     const getSampleSummary = async (breakPoints: BreakPoint[]) => {
         const param = breakPoints.map(b => {
             return {
-                from: 'v3-m5-m15-10' + b.start,
-                to: 'v3-m5-m15-10' + b.end
+                from: 'v3-5m-15m-10-' + b.start / 1000,
+                to: 'v3-5m-15m-10-' + b.end / 1000
             }
         })
         const resp = await sampleApi.getSampleSummary(param);
@@ -141,7 +141,7 @@ export const TrainDataGen: React.FC<TrainDataGenProps> = (props) => {
                                 }}
                         ><i className="fas fa-microchip"></i></Button>
                         <Form.Text style={{display: 'inline'}}>
-                            {'count' in bp ? bp.count : ''}
+                            {'count' in bp ? 'Sample count: ' + bp.count : ''}
                         </Form.Text>
                     </ListGroup.Item>
                 })}

@@ -12,9 +12,9 @@ def connect():
     return con
 
 
-def select_execute(con, sql):
+def select_execute(con, sql, params=()):
     with con.cursor() as cur:
-        cur.execute(sql)
+        cur.execute(sql, params)
         rows = cur.fetchall()
 
     return rows
@@ -134,22 +134,26 @@ def get_sample_summary(body):  # noqa: E501
             'query_string': 'nothing'
         }
 
+    params = []
     s = ''
     for row in body:
+        params.append((row['from'], row['to']))
         if len(s) > 0:
             s = s + ', '
-        s = s + """('{0}','{1}')""".format(row['from'], row['to'])
+        s = s + '%s'
+        # s = s + """('{0}','{1}')""".format(row['from'], row['to'])
 
     conn = connect()
-    sql = """SELECT cond.from, cond.to, count(1) "count"
+    sql = """SELECT cond.from, cond.to, count(sa.uid) "count"
         FROM (
             values {0}
         ) cond("from", "to")
         left join samples sa on cond.from <= sa.uid and cond.to >= sa.uid
         group by cond.from, cond.to
+        order by cond.from ASC
         """.format(s)
 
-    rows = select_execute(conn, sql)
+    rows = select_execute(conn, sql, tuple(params))
     return {
         'data': [{
             "from": row[0],
