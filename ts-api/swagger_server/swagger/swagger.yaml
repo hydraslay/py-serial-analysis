@@ -115,7 +115,7 @@ paths:
       operationId: get_sample_summary
       requestBody:
         content:
-          '*/*':
+          application/json:
             schema:
               $ref: '#/components/schemas/SampleSummaryRequest'
         required: true
