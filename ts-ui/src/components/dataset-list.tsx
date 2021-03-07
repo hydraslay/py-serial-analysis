@@ -4,6 +4,7 @@ import React, {useEffect, useState} from "react";
 import {Button, Col, Form, FormCheck, ListGroup} from "react-bootstrap";
 import {DataSetEditor} from "./dataset-editor";
 import {DelayConfirm} from "../util/delay-confirm";
+import {secondsToDays, tsToDateStr} from "../interface";
 
 type DataSetListProps = {
     breakPoints: MarketBreakPoint[];
@@ -49,8 +50,8 @@ export const DataSetList: React.FC<DataSetListProps> = (props) => {
                 {state.dataSets.map((ds, i) => {
                     const arr = ds!.uidFrom!.split('-');
                     const signature = arr.slice(0, 4).join('-');
-                    const from = moment(new Date(parseInt(arr[4]))).format('YYYY-MM-DD');
-                    const duration = Math.round((parseInt(ds!.uidTo!.split('-')[4]) - parseInt(arr[4])) / 1000 / 3600 / 24);
+                    const from = tsToDateStr(arr[4]);
+                    const duration = secondsToDays(parseInt(ds!.uidTo!.split('-')[4]) - parseInt(arr[4]));
                     return (<ListGroup.Item
                             key={'dataSet' + i}
                             style={{

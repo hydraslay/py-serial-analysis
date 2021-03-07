@@ -102,7 +102,7 @@ export const TrainDataGen: React.FC<TrainDataGenProps> = (props) => {
                     const arrTo = i.to!.split('-')
                     const tsTo = parseInt(arrTo[arrTo.length - 1]) * 1000
                     return {
-                        label: `${moment(tsFrom).format('YYYY-MM-DD')} ~ ${moment(tsTo).format('YYYY-MM-DD')}`,
+                        label: `${moment(tsFrom).format('YYYY/MM/DD')} ~ ${moment(tsTo).format('YYYY/MM/DD')}`,
                         start: tsFrom,
                         end: tsTo,
                         count: i.count!

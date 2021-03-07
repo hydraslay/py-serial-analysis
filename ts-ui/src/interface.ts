@@ -1,4 +1,5 @@
 import {RawData, Samples} from "./api";
+import moment from "moment";
 
 export type RawDataItem = Required<RawData>
 
@@ -34,3 +35,16 @@ export type BreakPoint = {
 export type BreakPointSummary = {
     count: number
 } & BreakPoint
+
+
+export function tsToDateStr(ts: number | string) {
+    return moment(new Date((typeof ts === 'string' ? parseInt(ts) : ts) * 1000)).format('YYYY/MM/DD');
+}
+
+export function dateStrToTs(dt: string) {
+    return moment(dt, 'YYYY/MM/DD').toDate().valueOf() / 1000;
+}
+
+export function secondsToDays(sec: number) {
+    return Math.round(sec / 3600 / 24)
+}
