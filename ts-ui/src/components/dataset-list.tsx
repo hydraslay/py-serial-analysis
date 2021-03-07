@@ -126,19 +126,20 @@ export const DataSetList: React.FC<DataSetListProps> = (props) => {
         </Form.Group>
         {state.editing
             ? <Form.Group as={Col} sm={12}>
-                <DataSetEditor breakPoints={props.breakPoints}
-                               onSave={d => {
-                                   sampleApi.setDataSet(d).then(() => {
-                                       refreshDataSets()
-                                   })
-                               }}
-                               editing={state.editing}
-                               onCancel={() => {
-                                   setState({
-                                       ...state,
-                                       editing: null
-                                   })
-                               }}
+                <DataSetEditor
+                    breakPoints={props.breakPoints}
+                    onSave={d => {
+                        sampleApi.setDataSet(d).then(() => {
+                            refreshDataSets()
+                        })
+                    }}
+                    editing={state.editing}
+                    onCancel={() => {
+                        setState({
+                            ...state,
+                            editing: null
+                        })
+                    }}
                 />
             </Form.Group>
             : null
