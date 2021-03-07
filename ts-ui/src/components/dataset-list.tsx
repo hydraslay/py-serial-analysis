@@ -1,7 +1,6 @@
-import moment from 'moment'
-import {DataSet, MarketBreakPoint, RawDataApi, SampleApi} from "../api";
+import {DataSet, FitApi, MarketBreakPoint, SampleApi} from "../api";
 import React, {useEffect, useState} from "react";
-import {Button, Col, Form, FormCheck, ListGroup} from "react-bootstrap";
+import {Button, Col, Form, FormCheck, ListGroup, Toast} from "react-bootstrap";
 import {DataSetEditor} from "./dataset-editor";
 import {DelayConfirm} from "../util/delay-confirm";
 import {secondsToDays, tsToDateStr} from "../interface";
@@ -14,6 +13,7 @@ type DataSetListState = {
     dataSets: DataSet[];
     selectedId: number[];
     editing: DataSet | null;
+    showToast: boolean;
 }
 
 const configuration = {
@@ -21,21 +21,23 @@ const configuration = {
 }
 
 const sampleApi = new SampleApi(configuration);
-const rawDataApi = new RawDataApi(configuration);
+const fitApi = new FitApi(configuration);
 
 export const DataSetList: React.FC<DataSetListProps> = (props) => {
     const [state, setState] = useState({
         dataSets: [],
         selectedId: [],
-        editing: false
+        editing: false,
+        showToast: false
     } as DataSetListState)
 
     const refreshDataSets = () => {
-        const data = sampleApi.getDataSets().then(dataSets => {
+        sampleApi.getDataSets().then(dataSets => {
             setState({
                 dataSets: dataSets.data!,
                 selectedId: [],
-                editing: null
+                editing: null,
+                showToast: false
             })
         })
     }
@@ -60,6 +62,7 @@ export const DataSetList: React.FC<DataSetListProps> = (props) => {
                         >
                             <FormCheck
                                 style={{display: 'inline', marginRight: '10px'}}
+                                checked={state.selectedId.indexOf(ds.id!) >= 0}
                                 onChange={(a) => {
                                     const newSelectedId = [...state.selectedId]
                                     if (a.target.checked) {
@@ -119,12 +122,32 @@ export const DataSetList: React.FC<DataSetListProps> = (props) => {
             }}
                 disabled={state.selectedId.length !== 1}
                 onClick={() => {
-
+                    fitApi.setFit({
+                        dataSet: state.selectedId[0]
+                    }).then(() => {
+                        setState({
+                            ...state,
+                            selectedId: [],
+                            editing: null,
+                            showToast: true
+                        })
+                    })
                 }}
             >
                 {'>> FIT <<'}
             </Button>
         </Form.Group>
+        <Toast
+            onClose={() => setState({
+                ...state,
+                showToast: false
+            })}
+            show={state.showToast} delay={3000} autohide>
+            <Toast.Header>
+                <strong className="mr-auto">Fit process started</strong>
+            </Toast.Header>
+            {/*<Toast.Body>Fit process started</Toast.Body>*/}
+        </Toast>
         {state.editing
             ? <Form.Group as={Col} sm={12}>
                 <DataSetEditor
