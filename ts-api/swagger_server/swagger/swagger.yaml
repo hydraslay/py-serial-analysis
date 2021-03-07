@@ -194,6 +194,39 @@ paths:
           content: {}
       x-codegen-request-body-name: body
       x-openapi-router-controller: swagger_server.controllers.sample_controller
+  /fit:
+    get:
+      tags:
+      - Fit
+      summary: get fit status
+      description: get fit status
+      operationId: get_fits
+      responses:
+        "200":
+          description: get fit status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FitsResponse'
+      x-openapi-router-controller: swagger_server.controllers.fit_controller
+    post:
+      tags:
+      - Fit
+      summary: begin or cancel a fit process
+      description: begin or cancel a fit process
+      operationId: set_fit
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FitRequest'
+        required: true
+      responses:
+        "200":
+          description: begin or cancel a fit process
+          content: {}
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: swagger_server.controllers.fit_controller
 components:
   schemas:
     RawDataResponse:
@@ -455,5 +488,68 @@ components:
         count: 0.8008281904610115
         from: from
         to: to
+    FitsResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Fit'
+        query_string:
+          type: string
+      example:
+        data:
+        - data_set:
+            uid_to: uid_to
+            name: name
+            count: 6.027456183070403
+            id: 0.8008281904610115
+            uid_from: uid_from
+          started: started
+          finished: finished
+          id: 0.8008281904610115
+          status: status
+        - data_set:
+            uid_to: uid_to
+            name: name
+            count: 6.027456183070403
+            id: 0.8008281904610115
+            uid_from: uid_from
+          started: started
+          finished: finished
+          id: 0.8008281904610115
+          status: status
+        query_string: query_string
+    Fit:
+      type: object
+      properties:
+        id:
+          type: number
+        data_set:
+          $ref: '#/components/schemas/DataSet'
+        started:
+          type: string
+        finished:
+          type: string
+        status:
+          type: string
+      example:
+        data_set:
+          uid_to: uid_to
+          name: name
+          count: 6.027456183070403
+          id: 0.8008281904610115
+          uid_from: uid_from
+        started: started
+        finished: finished
+        id: 0.8008281904610115
+        status: status
+    FitRequest:
+      type: object
+      properties:
+        id:
+          type: number
+        data_set:
+          type: number
 x-original-swagger-version: "2.0"
 

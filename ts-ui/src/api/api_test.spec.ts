@@ -15,6 +15,21 @@ import { Configuration } from "./configuration"
 
 const config: Configuration = {}
 
+describe("FitApi", () => {
+  let instance: api.FitApi
+  beforeEach(function() {
+    instance = new api.FitApi(config)
+  });
+
+  test("getFits", () => {
+    return expect(instance.getFits({})).resolves.toBe(null)
+  })
+  test("setFit", () => {
+    const body: api.FitRequest = undefined
+    return expect(instance.setFit(body, {})).resolves.toBe(null)
+  })
+})
+
 describe("ModelApi", () => {
   let instance: api.ModelApi
   beforeEach(function() {

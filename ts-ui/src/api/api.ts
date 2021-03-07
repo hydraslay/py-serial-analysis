@@ -135,6 +135,81 @@ export interface DataSetResponse {
 /**
  * 
  * @export
+ * @interface Fit
+ */
+export interface Fit {
+    /**
+     * 
+     * @type {number}
+     * @memberof Fit
+     */
+    id?: number;
+    /**
+     * 
+     * @type {DataSet}
+     * @memberof Fit
+     */
+    dataSet?: DataSet;
+    /**
+     * 
+     * @type {string}
+     * @memberof Fit
+     */
+    started?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Fit
+     */
+    finished?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Fit
+     */
+    status?: string;
+}
+/**
+ * 
+ * @export
+ * @interface FitRequest
+ */
+export interface FitRequest {
+    /**
+     * 
+     * @type {number}
+     * @memberof FitRequest
+     */
+    id?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof FitRequest
+     */
+    dataSet?: number;
+}
+/**
+ * 
+ * @export
+ * @interface FitsResponse
+ */
+export interface FitsResponse {
+    /**
+     * 
+     * @type {Array<Fit>}
+     * @memberof FitsResponse
+     */
+    data?: Array<Fit>;
+    /**
+     * 
+     * @type {string}
+     * @memberof FitsResponse
+     */
+    queryString?: string;
+}
+/**
+ * 
+ * @export
  * @interface MarketBreakPoint
  */
 export interface MarketBreakPoint {
@@ -396,6 +471,175 @@ export interface SamplesResponse {
      * @memberof SamplesResponse
      */
     queryString?: string;
+}
+/**
+ * FitApi - fetch parameter creator
+ * @export
+ */
+export const FitApiFetchParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * get fit status
+         * @summary get fit status
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getFits(options: any = {}): FetchArgs {
+            const localVarPath = `/fit`;
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete localVarUrlObj.search;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * begin or cancel a fit process
+         * @summary begin or cancel a fit process
+         * @param {FitRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        setFit(body: FitRequest, options: any = {}): FetchArgs {
+            // verify required parameter 'body' is not null or undefined
+            if (body === null || body === undefined) {
+                throw new RequiredError('body','Required parameter body was null or undefined when calling setFit.');
+            }
+            const localVarPath = `/fit`;
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'POST' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete localVarUrlObj.search;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            const needsSerialization = (<any>"FitRequest" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(body || {}) : (body || "");
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * FitApi - functional programming interface
+ * @export
+ */
+export const FitApiFp = function(configuration?: Configuration) {
+    return {
+        /**
+         * get fit status
+         * @summary get fit status
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getFits(options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<FitsResponse> {
+            const localVarFetchArgs = FitApiFetchParamCreator(configuration).getFits(options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+        /**
+         * begin or cancel a fit process
+         * @summary begin or cancel a fit process
+         * @param {FitRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        setFit(body: FitRequest, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+            const localVarFetchArgs = FitApiFetchParamCreator(configuration).setFit(body, options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response;
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+    }
+};
+
+/**
+ * FitApi - factory interface
+ * @export
+ */
+export const FitApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
+    return {
+        /**
+         * get fit status
+         * @summary get fit status
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getFits(options?: any) {
+            return FitApiFp(configuration).getFits(options)(fetch, basePath);
+        },
+        /**
+         * begin or cancel a fit process
+         * @summary begin or cancel a fit process
+         * @param {FitRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        setFit(body: FitRequest, options?: any) {
+            return FitApiFp(configuration).setFit(body, options)(fetch, basePath);
+        },
+    };
+};
+
+/**
+ * FitApi - object-oriented interface
+ * @export
+ * @class FitApi
+ * @extends {BaseAPI}
+ */
+export class FitApi extends BaseAPI {
+    /**
+     * get fit status
+     * @summary get fit status
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FitApi
+     */
+    public getFits(options?: any) {
+        return FitApiFp(this.configuration).getFits(options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * begin or cancel a fit process
+     * @summary begin or cancel a fit process
+     * @param {FitRequest} body 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FitApi
+     */
+    public setFit(body: FitRequest, options?: any) {
+        return FitApiFp(this.configuration).setFit(body, options)(this.fetch, this.basePath);
+    }
+
 }
 /**
  * ModelApi - fetch parameter creator

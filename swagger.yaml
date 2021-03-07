@@ -169,6 +169,37 @@ paths:
         '200':
           description: add or update data set success
 
+  /fit:
+    get:
+      tags:
+        - Fit
+      operationId: getFits
+      summary: get fit status
+      description: get fit status
+      responses:
+        '200':
+          description: get fit status
+          schema:
+            $ref: '#/definitions/FitsResponse'
+
+    post:
+      tags:
+        - Fit
+      operationId: setFit
+      summary: begin or cancel a fit process
+      description: begin or cancel a fit process
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/FitRequest'
+      responses:
+        '200':
+          description: begin or cancel a fit process
+
 definitions:
 
   RawDataResponse:
@@ -316,4 +347,37 @@ definitions:
       to:
         type: string
       count:
+        type: number
+
+  FitsResponse:
+    type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/Fit'
+      query_string:
+        type: string
+
+  Fit:
+    type: object
+    properties:
+      id:
+        type: number
+      data_set:
+        type: object
+        $ref: '#/definitions/DataSet'
+      started:
+        type: string
+      finished:
+        type: string
+      status:
+        type: string
+
+  FitRequest:
+    type: object
+    properties:
+      id:
+        type: number
+      data_set:
         type: number
