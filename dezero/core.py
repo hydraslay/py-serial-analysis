@@ -7,7 +7,7 @@ from memory_profiler import profile
 
 class Config:
     enable_back_prop = True
-
+    train = True
 
 @contextlib.contextmanager
 def using_config(name, value):
@@ -17,6 +17,10 @@ def using_config(name, value):
         yield
     finally:
         setattr(Config, name, old_value)
+
+
+def test_mode():
+    return using_config('train', False)
 
 
 def no_grad():
