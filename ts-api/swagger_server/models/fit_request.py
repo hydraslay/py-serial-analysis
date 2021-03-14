@@ -14,24 +14,24 @@ class FitRequest(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, id: float=None, data_set: float=None):  # noqa: E501
+    def __init__(self, model: str=None, data_set: float=None):  # noqa: E501
         """FitRequest - a model defined in Swagger
 
-        :param id: The id of this FitRequest.  # noqa: E501
-        :type id: float
+        :param model: The model of this FitRequest.  # noqa: E501
+        :type model: str
         :param data_set: The data_set of this FitRequest.  # noqa: E501
         :type data_set: float
         """
         self.swagger_types = {
-            'id': float,
+            'model': str,
             'data_set': float
         }
 
         self.attribute_map = {
-            'id': 'id',
+            'model': 'model',
             'data_set': 'data_set'
         }
-        self._id = id
+        self._model = model
         self._data_set = data_set
 
     @classmethod
@@ -46,25 +46,29 @@ class FitRequest(Model):
         return util.deserialize_model(dikt, cls)
 
     @property
-    def id(self) -> float:
-        """Gets the id of this FitRequest.
+    def model(self) -> str:
+        """Gets the model of this FitRequest.
 
+        specific the model number  # noqa: E501
 
-        :return: The id of this FitRequest.
-        :rtype: float
+        :return: The model of this FitRequest.
+        :rtype: str
         """
-        return self._id
+        return self._model
 
-    @id.setter
-    def id(self, id: float):
-        """Sets the id of this FitRequest.
+    @model.setter
+    def model(self, model: str):
+        """Sets the model of this FitRequest.
 
+        specific the model number  # noqa: E501
 
-        :param id: The id of this FitRequest.
-        :type id: float
+        :param model: The model of this FitRequest.
+        :type model: str
         """
+        if model is None:
+            raise ValueError("Invalid value for `model`, must not be `None`")  # noqa: E501
 
-        self._id = id
+        self._model = model
 
     @property
     def data_set(self) -> float:
@@ -84,5 +88,7 @@ class FitRequest(Model):
         :param data_set: The data_set of this FitRequest.
         :type data_set: float
         """
+        if data_set is None:
+            raise ValueError("Invalid value for `data_set`, must not be `None`")  # noqa: E501
 
         self._data_set = data_set

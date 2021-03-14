@@ -378,8 +378,12 @@ definitions:
 
   FitRequest:
     type: object
+    required:
+      - model
+      - data_set
     properties:
-      id:
-        type: number
+      model:
+        type: string
+        description: specific the model number
       data_set:
         type: number

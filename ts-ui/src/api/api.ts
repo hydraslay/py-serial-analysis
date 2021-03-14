@@ -176,17 +176,17 @@ export interface Fit {
  */
 export interface FitRequest {
     /**
-     * 
-     * @type {number}
+     * specific the model number
+     * @type {string}
      * @memberof FitRequest
      */
-    id?: number;
+    model: string;
     /**
      * 
      * @type {number}
      * @memberof FitRequest
      */
-    dataSet?: number;
+    dataSet: number;
 }
 /**
  * 
