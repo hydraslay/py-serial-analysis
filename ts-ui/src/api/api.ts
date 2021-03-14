@@ -273,6 +273,25 @@ export interface Model {
 /**
  * 
  * @export
+ * @interface ModelListResponse
+ */
+export interface ModelListResponse {
+    /**
+     * 
+     * @type {Array<Model>}
+     * @memberof ModelListResponse
+     */
+    data?: Array<Model>;
+    /**
+     * 
+     * @type {string}
+     * @memberof ModelListResponse
+     */
+    queryString?: string;
+}
+/**
+ * 
+ * @export
  * @interface RawData
  */
 export interface RawData {
@@ -746,7 +765,7 @@ export const ModelApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getModels(options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Model> {
+        getModels(options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ModelListResponse> {
             const localVarFetchArgs = ModelApiFetchParamCreator(configuration).getModels(options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {

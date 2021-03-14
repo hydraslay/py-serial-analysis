@@ -71,7 +71,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Model'
+                $ref: '#/components/schemas/ModelListResponse'
       x-openapi-router-controller: swagger_server.controllers.model_controller
     post:
       tags:
@@ -296,6 +296,26 @@ components:
           type: string
       example:
         timestamp: timestamp
+    ModelListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Model'
+        query_string:
+          type: string
+      example:
+        data:
+        - stat: stat
+          description: description
+          model: model
+          params: params
+        - stat: stat
+          description: description
+          model: model
+          params: params
+        query_string: query_string
     Model:
       type: object
       properties:
