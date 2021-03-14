@@ -123,6 +123,7 @@ export const DataSetList: React.FC<DataSetListProps> = (props) => {
                 disabled={state.selectedId.length !== 1}
                 onClick={() => {
                     fitApi.setFit({
+                        model: '',
                         dataSet: state.selectedId[0]
                     }).then(() => {
                         setState({

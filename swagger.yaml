@@ -56,7 +56,7 @@ paths:
         '200':
           description: get Model list
           schema:
-            $ref: '#/definitions/Model'
+            $ref: '#/definitions/ModelListResponse'
     post:
       tags:
         - Model
@@ -242,6 +242,16 @@ definitions:
     type: object
     properties:
       timestamp:
+        type: string
+
+  ModelListResponse:
+    type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/Model'
+      query_string:
         type: string
 
   Model:
