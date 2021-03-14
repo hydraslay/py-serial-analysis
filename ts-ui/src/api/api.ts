@@ -263,6 +263,12 @@ export interface Model {
      * @memberof Model
      */
     params?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Model
+     */
+    stat?: string;
 }
 /**
  * 

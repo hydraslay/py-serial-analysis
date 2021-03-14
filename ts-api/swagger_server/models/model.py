@@ -14,7 +14,7 @@ class Model(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, model: str=None, description: str=None, params: str=None):  # noqa: E501
+    def __init__(self, model: str=None, description: str=None, params: str=None, stat: str=None):  # noqa: E501
         """Model - a model defined in Swagger
 
         :param model: The model of this Model.  # noqa: E501
@@ -23,21 +23,26 @@ class Model(Model):
         :type description: str
         :param params: The params of this Model.  # noqa: E501
         :type params: str
+        :param stat: The stat of this Model.  # noqa: E501
+        :type stat: str
         """
         self.swagger_types = {
             'model': str,
             'description': str,
-            'params': str
+            'params': str,
+            'stat': str
         }
 
         self.attribute_map = {
             'model': 'model',
             'description': 'description',
-            'params': 'params'
+            'params': 'params',
+            'stat': 'stat'
         }
         self._model = model
         self._description = description
         self._params = params
+        self._stat = stat
 
     @classmethod
     def from_dict(cls, dikt) -> 'Model':
@@ -112,3 +117,24 @@ class Model(Model):
         """
 
         self._params = params
+
+    @property
+    def stat(self) -> str:
+        """Gets the stat of this Model.
+
+
+        :return: The stat of this Model.
+        :rtype: str
+        """
+        return self._stat
+
+    @stat.setter
+    def stat(self, stat: str):
+        """Sets the stat of this Model.
+
+
+        :param stat: The stat of this Model.
+        :type stat: str
+        """
+
+        self._stat = stat

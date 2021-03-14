@@ -305,7 +305,10 @@ components:
           type: string
         params:
           type: string
+        stat:
+          type: string
       example:
+        stat: stat
         description: description
         model: model
         params: params
