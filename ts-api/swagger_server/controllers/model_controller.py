@@ -27,7 +27,10 @@ def get_models():  # noqa: E501
 	        FROM models;
         """
     rows = select_execute(conn, sql)
-    return rows
+    return {
+        'data': rows,
+        'query_string': sql
+    }
 
 
 def get_sample_types():  # noqa: E501
