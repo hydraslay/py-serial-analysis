@@ -81,7 +81,7 @@ paths:
       operationId: set_model
       requestBody:
         content:
-          '*/*':
+          application/json:
             schema:
               $ref: '#/components/schemas/Model'
         required: true

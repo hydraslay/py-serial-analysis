@@ -1,9 +1,10 @@
 import {DataSet, FitApi, MarketBreakPoint, Model, ModelApi, SampleApi} from "../api";
 import React, {useEffect, useState} from "react";
-import {Button, Col, Form, ListGroup, Toast} from "react-bootstrap";
+import {Button, Col, Form, FormCheck, ListGroup, Toast} from "react-bootstrap";
 import {DelayConfirm} from "../util/delay-confirm";
 import {DataSetEditor} from "./dataset-editor";
 import {ModelEditor} from "./model-editor";
+import {secondsToDays, tsToDateStr} from "../interface";
 
 type ModelListProps = {
 }
@@ -46,8 +47,44 @@ export const ModelList: React.FC<ModelListProps> = (props) => {
     return (<Form>
         <Form.Group as={Col} sm={12}>
             <ListGroup>
-
-
+                {state.data.map((m, i) => {
+                    return (<ListGroup.Item
+                        key={'dataSet' + i}
+                        style={{
+                            textAlign: 'left'
+                        }}
+                    >
+                        <FormCheck
+                            style={{display: 'inline', marginRight: '10px'}}
+                            checked={state.selectedModel.indexOf(m.model!) >= 0}
+                            onChange={(a) => {
+                                const newSelectedId = [...state.selectedModel]
+                                if (a.target.checked) {
+                                    newSelectedId.splice(0, 0, m.model!)
+                                } else {
+                                    newSelectedId.splice(newSelectedId.indexOf(m.model!), 1)
+                                }
+                                setState({
+                                    ...state,
+                                    selectedModel: newSelectedId
+                                })
+                            }}
+                        />
+                        <Form.Text style={{display: 'inline', marginRight: '10px', fontSize: '16px'}}>{m.model!}</Form.Text>
+                        <Form.Text style={{display: 'inline', marginRight: '10px', fontSize: '16px'}}>{m.description!}</Form.Text>
+                        <Form.Text style={{display: 'inline', marginRight: '10px', fontSize: '16px'}}>{m.stat!}</Form.Text>
+                        <Button
+                            onClick={() => {
+                                setState({
+                                    ...state,
+                                    editing: m
+                                })
+                            }}
+                            variant='outline-primary'
+                        ><i className='fa fa-edit'/></Button>
+                    </ListGroup.Item>);
+                })
+                }
             </ListGroup>
         </Form.Group>
         <Form.Group as={Col} sm={12} style={{textAlign: 'left'}}>

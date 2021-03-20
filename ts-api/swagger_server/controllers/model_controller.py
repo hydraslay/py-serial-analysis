@@ -28,7 +28,12 @@ def get_models():  # noqa: E501
         """
     rows = select_execute(conn, sql)
     return {
-        'data': rows,
+        'data': [{
+            "model": row[0],
+            "description": row[1],
+            "params": row[2],
+            "stat": row[3]
+        } for row in rows],
         'query_string': sql
     }
 
@@ -48,9 +53,9 @@ def set_model(body):  # noqa: E501
         cur.execute(sql, (body['model'],
                           body['description'],
                           json.dumps(body['params']),
-                          body['stat']),
+                          body['stat'],
                     body['description'],
                     json.dumps(body['params']),
-                    body['stat'])
+                    body['stat']))
     conn.commit()
     return 'done'
