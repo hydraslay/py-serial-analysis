@@ -39,7 +39,7 @@ class Fit(Model):
 
         self.attribute_map = {
             'id': 'id',
-            'data_set': 'data_set',
+            'data_set': 'dataSet',
             'started': 'started',
             'finished': 'finished',
             'status': 'status'

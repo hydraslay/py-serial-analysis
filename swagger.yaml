@@ -378,7 +378,7 @@ definitions:
     properties:
       id:
         type: number
-      data_set:
+      dataSet:
         type: object
         $ref: '#/definitions/DataSet'
       started:
@@ -392,10 +392,10 @@ definitions:
     type: object
     required:
       - model
-      - data_set
+      - dataSet
     properties:
       model:
         type: string
         description: specific the model number
-      data_set:
+      dataSet:
         type: number

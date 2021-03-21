@@ -29,7 +29,7 @@ class FitRequest(Model):
 
         self.attribute_map = {
             'model': 'model',
-            'data_set': 'data_set'
+            'data_set': 'dataSet'
         }
         self._model = model
         self._data_set = data_set

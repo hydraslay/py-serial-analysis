@@ -522,25 +522,25 @@ components:
           type: string
       example:
         data:
-        - data_set:
+        - started: started
+          finished: finished
+          id: 0.8008281904610115
+          dataSet:
             uid_to: uid_to
             name: name
             count: 6.027456183070403
             id: 0.8008281904610115
             uid_from: uid_from
-          started: started
-          finished: finished
-          id: 0.8008281904610115
           status: status
-        - data_set:
+        - started: started
+          finished: finished
+          id: 0.8008281904610115
+          dataSet:
             uid_to: uid_to
             name: name
             count: 6.027456183070403
             id: 0.8008281904610115
             uid_from: uid_from
-          started: started
-          finished: finished
-          id: 0.8008281904610115
           status: status
         query_string: query_string
     Fit:
@@ -548,7 +548,7 @@ components:
       properties:
         id:
           type: number
-        data_set:
+        dataSet:
           $ref: '#/components/schemas/DataSet'
         started:
           type: string
@@ -557,26 +557,26 @@ components:
         status:
           type: string
       example:
-        data_set:
+        started: started
+        finished: finished
+        id: 0.8008281904610115
+        dataSet:
           uid_to: uid_to
           name: name
           count: 6.027456183070403
           id: 0.8008281904610115
           uid_from: uid_from
-        started: started
-        finished: finished
-        id: 0.8008281904610115
         status: status
     FitRequest:
       required:
-      - data_set
+      - dataSet
       - model
       type: object
       properties:
         model:
           type: string
           description: specific the model number
-        data_set:
+        dataSet:
           type: number
 x-original-swagger-version: "2.0"
 

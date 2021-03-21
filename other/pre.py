@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import pandas_datareader as web
 import datetime as dt
+from joblib import dump, load
 
 from sklearn.preprocessing import MinMaxScaler
 from tensorflow.keras.models import Sequential
@@ -18,10 +19,11 @@ end = dt.datetime(2020, 1, 1)
 
 data = web.DataReader(company, 'yahoo', start, end)
 
-scaler = MinMaxScaler(feature_range=(0, 1))
+# scaler = MinMaxScaler(feature_range=(0, 1))
+scaler = load('MinMaxScaler.joblib')
 scaled_data = scaler.fit_transform(data['Close'].values.reshape(-1, 1))
-
-pred_days = 60
+# dump(scaler, 'MinMaxScaler.joblib')
+pred_days = 10
 x_train = []
 y_train = []
 
@@ -44,7 +46,7 @@ model.add(Dense(units=1))
 
 model.compile(optimizer='adam', loss='mean_squared_error')
 model.fit(x_train, y_train, epochs=25, batch_size=32)
-
+model.save('model.mdl')
 ''' Test The Model Accuracy on Existing Data '''
 
 test_start = dt.datetime(2020, 1, 1)
