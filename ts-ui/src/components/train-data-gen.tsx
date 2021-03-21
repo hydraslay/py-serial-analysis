@@ -33,7 +33,7 @@ export const TrainDataGen: React.FC<TrainDataGenProps> = (props) => {
         progress: -1
     } as TrainDataGenState)
 
-    useEffect(() => {
+    const refreshList = () => {
         let start: string = '';
         const breakPoints = props.breakPoints.reduce((arr: BreakPoint[], item) => {
             const curr = item.timestamp!;
@@ -54,6 +54,10 @@ export const TrainDataGen: React.FC<TrainDataGenProps> = (props) => {
             breakPoints
         })
         getSampleSummary(breakPoints);
+    }
+
+    useEffect(() => {
+        refreshList();
     }, [props.breakPoints])
 
     const generateUpload = async (bp: BreakPoint) => {
@@ -77,12 +81,8 @@ export const TrainDataGen: React.FC<TrainDataGenProps> = (props) => {
             samples: all,
             progress: 70
         })
-        await sampleApi.setSamples(toSampleArray(state.samples))
-        setState({
-            ...state,
-            samples: all,
-            progress: 100
-        })
+        await sampleApi.setSamples(toSampleArray(all))
+        await refreshList();
     }
 
     const getSampleSummary = async (breakPoints: BreakPoint[]) => {
