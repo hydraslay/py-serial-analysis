@@ -2,7 +2,7 @@ import connexion
 import psycopg2
 import json
 import os
-from swagger_server.fit.pre import start_fit
+from swagger_server.fit.pre import start_fit, start_predict
 import zipfile
 
 
@@ -28,5 +28,6 @@ def set_fit(body):  # noqa: E501
     zipdir(os.path.join('tmp', 'model'), zipf)
     zipf.close()
 
+    start_predict()
     # upload to s3
     return 'do some magic!'
