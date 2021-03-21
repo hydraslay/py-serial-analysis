@@ -1,13 +1,10 @@
-import {DataSet, FitApi, MarketBreakPoint, Model, ModelApi, SampleApi} from "../api";
+import {FitApi, Model, ModelApi} from "../api";
 import React, {useEffect, useState} from "react";
 import {Button, Col, Form, FormCheck, ListGroup, Toast} from "react-bootstrap";
 import {DelayConfirm} from "../util/delay-confirm";
-import {DataSetEditor} from "./dataset-editor";
 import {ModelEditor} from "./model-editor";
-import {secondsToDays, tsToDateStr} from "../interface";
 
-type ModelListProps = {
-}
+type ModelListProps = {}
 
 type ModelListState = {
     data: Model[];
@@ -70,9 +67,15 @@ export const ModelList: React.FC<ModelListProps> = (props) => {
                                 })
                             }}
                         />
-                        <Form.Text style={{display: 'inline', marginRight: '10px', fontSize: '16px'}}>{m.model!}</Form.Text>
-                        <Form.Text style={{display: 'inline', marginRight: '10px', fontSize: '16px'}}>{m.description!}</Form.Text>
-                        <Form.Text style={{display: 'inline', marginRight: '10px', fontSize: '16px'}}>{m.stat!}</Form.Text>
+                        <Form.Text
+                            style={{display: 'inline', marginRight: '10px', fontSize: '16px'}}>{m.model!}</Form.Text>
+                        <Form.Text style={{
+                            display: 'inline',
+                            marginRight: '10px',
+                            fontSize: '16px'
+                        }}>{m.description!}</Form.Text>
+                        <Form.Text
+                            style={{display: 'inline', marginRight: '10px', fontSize: '16px'}}>{m.stat!}</Form.Text>
                         <Button
                             onClick={() => {
                                 setState({

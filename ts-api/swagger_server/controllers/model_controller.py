@@ -54,8 +54,8 @@ def set_model(body):  # noqa: E501
                           body['description'],
                           json.dumps(body['params']),
                           body['stat'],
-                    body['description'],
-                    json.dumps(body['params']),
-                    body['stat']))
+                          body['description'],
+                          json.dumps(body['params']),
+                          body['stat']))
     conn.commit()
     return 'done'
