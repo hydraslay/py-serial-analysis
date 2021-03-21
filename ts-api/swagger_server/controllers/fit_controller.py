@@ -1,9 +1,24 @@
-import connexion
-import psycopg2
-import json
 import os
-from swagger_server.fit.pre import start_fit, start_predict
 import zipfile
+import psycopg2
+from swagger_server.fit.pre import start_fit, start_predict
+from sklearn.datasets import make_multilabel_classification
+
+def connect():
+    con = psycopg2.connect("host=" + "localhost" +
+                           " port=" + "5434" +
+                           " dbname=" + "ts" +
+                           " user=" + "test" +
+                           " password=" + "test")
+    return con
+
+
+def select_execute(con, sql, params=()):
+    with con.cursor() as cur:
+        cur.execute(sql, params)
+        rows = cur.fetchall()
+
+    return rows
 
 
 def zipdir(path, ziph):
@@ -21,7 +36,32 @@ def get_fits():  # noqa: E501
 
 
 def set_fit(body):  # noqa: E501
-    # start_fit()
+    conn = connect()
+    sql = '''
+        SELECT sample_data, value, uid 
+        FROM data_set ds, samples sa
+        where ds.uid_from < sa.uid and ds.uid_to > sa.uid and ds.id=%s'''
+    rows = select_execute(conn, sql, tuple([int(body['dataSet'])]))
+    dataset_x = []
+    dataset_y = []
+    vol = []
+    for row in rows:
+        price = []
+        vols = []
+        prev_high = 0
+        prev_low = 0
+        for i, tick in enumerate(row[0]):
+            if i > 0:
+                price.append(tick['high'] - prev_high)
+                price.append(tick['low'] - prev_low)
+                vols.append(tick['volume'])
+            prev_high = tick['high']
+            prev_low = tick['low']
+        dataset_x.append(price)
+        dataset_y.append([row[1]])
+        vol.append(vols)
+
+    start_fit(dataset_x, dataset_y, vol)
 
     # zip
     zipf = zipfile.ZipFile(os.path.join('tmp', 'model.zip'), 'w', zipfile.ZIP_DEFLATED)

@@ -19,8 +19,8 @@ end = dt.datetime(2020, 1, 1)
 
 data = web.DataReader(company, 'yahoo', start, end)
 
-# scaler = MinMaxScaler(feature_range=(0, 1))
-scaler = load('MinMaxScaler.joblib')
+scaler = MinMaxScaler(feature_range=(0, 1))
+# scaler = load('MinMaxScaler.joblib')
 scaled_data = scaler.fit_transform(data['Close'].values.reshape(-1, 1))
 # dump(scaler, 'MinMaxScaler.joblib')
 pred_days = 10
@@ -45,6 +45,7 @@ model.add(Dropout(0.2))
 model.add(Dense(units=1))
 
 model.compile(optimizer='adam', loss='mean_squared_error')
+model.summary()
 model.fit(x_train, y_train, epochs=25, batch_size=32)
 model.save('model.mdl')
 ''' Test The Model Accuracy on Existing Data '''
