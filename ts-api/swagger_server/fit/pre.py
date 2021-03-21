@@ -15,7 +15,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Dropout, LSTM
 from tensorflow.keras.utils import to_categorical
 
-epochs = 100
+epochs = 20
 
 
 def start_fit(x_train, y_train, x_add=[]):
@@ -35,10 +35,12 @@ def start_fit(x_train, y_train, x_add=[]):
 
     model = Sequential()
 
-    model.add(Dense(units=64, input_shape=(x_train.shape[1],)))
-    model.add(Dropout(0.5))
+    model.add(Dense(units=256, input_shape=(x_train.shape[1],)))
+    model.add(Dropout(0.2))
+    model.add(Dense(units=128))
+    model.add(Dropout(0.2))
     model.add(Dense(units=64))
-    model.add(Dropout(0.5))
+    model.add(Dropout(0.2))
     model.add(Dense(units=3, activation='softmax'))
 
     model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
