@@ -14,6 +14,7 @@ from sklearn.preprocessing import MinMaxScaler, MultiLabelBinarizer
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Dropout, LSTM
 from tensorflow.keras.utils import to_categorical
+from tensorflow import keras
 
 epochs = 20
 
@@ -31,7 +32,7 @@ def start_fit(x_train, y_train, x_add=[]):
 
     # x_train = np.reshape(x_train, (x_train.shape[0], 1, x_train.shape[1]))
     # y_train = np.reshape(y_train, (y_train.shape[0], y_train.shape[1], 1))
-    # y_train = to_categorical(y_train)
+    y_train = to_categorical(y_train)
 
     model = Sequential()
 
@@ -43,7 +44,8 @@ def start_fit(x_train, y_train, x_add=[]):
     model.add(Dropout(0.2))
     model.add(Dense(units=3, activation='softmax'))
 
-    model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+    opt = keras.optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)
+    model.compile(optimizer=opt, loss='binary_crossentropy', metrics=['accuracy'])
     model.summary()
     model.fit(x_train, y_train, epochs=epochs)
     model.save(os.path.join('tmp', 'model'))
